@@ -1,4 +1,5 @@
-import { buildStyleDirection, getComposition, getEdge, productionRules, typographyDirection } from './shared.js'
+import { buildStyleDirection } from './styleCompiler.js'
+import { getComposition, getEdge, productionRules, typographyDirection } from './shared.js'
 
 export function buildFlowPrompt(recipe) {
   const modeTitle = recipe.subjectMode === 'reference' || recipe.subjectMode === 'logo'
