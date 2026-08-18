@@ -1,4 +1,5 @@
-import { buildStyleDirection, getComposition, getEdge, productionRules, typographyDirection, getTattooPlacement } from './shared.js'
+import { buildStyleDirection } from './styleCompiler.js'
+import { getComposition, getEdge, productionRules, typographyDirection, getTattooPlacement } from './shared.js'
 
 export function buildMidjourneyPrompt(recipe) {
   const parts = []
