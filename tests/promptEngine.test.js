@@ -171,7 +171,7 @@ test('Vector-style artwork remains valid for DTF', () => {
 
 test('Graphic mode uses graphic-specific style override', () => {
   const output = buildFlowPrompt(recipe({ subjectMode: 'graphic', primaryStyle: 'jdm-racing-vector' }))
-  assert.match(output, /without human figures/)
+  assert.match(output, /no human figures/)
 })
 
 test('dual-style compiler applies secondary style using the selected fusion mode', () => {
