@@ -1,0 +1,365 @@
+.benchmark-launch {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 20;
+  text-decoration: none;
+  color: #e0f2fe;
+  background: #082f49;
+  border: 1px solid #0ea5e9;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .28);
+}
+
+.benchmark-shell {
+  width: min(1500px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 64px;
+  color: #e4e4e7;
+}
+
+.benchmark-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+  border-bottom: 1px solid #2a2a30;
+  padding: 10px 4px 24px;
+}
+
+.benchmark-header h1 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 46px);
+  letter-spacing: -.04em;
+}
+
+.benchmark-header p:not(.benchmark-eyebrow) {
+  color: #8b8b95;
+  max-width: 760px;
+  line-height: 1.55;
+  margin: 10px 0 0;
+}
+
+.benchmark-eyebrow,
+.benchmark-kicker {
+  margin: 0 0 6px;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.benchmark-back,
+.benchmark-card-head button,
+.benchmark-score-head button,
+.benchmark-export {
+  border: 1px solid #303038;
+  background: #15151a;
+  color: #f4f4f5;
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-weight: 750;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.benchmark-toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(280px, .7fr);
+  gap: 14px;
+  align-items: end;
+  padding: 18px 0;
+}
+
+.benchmark-toolbar label {
+  display: grid;
+  gap: 7px;
+}
+
+.benchmark-toolbar label > span,
+.benchmark-notes > span {
+  color: #92929b;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.benchmark-toolbar select,
+.benchmark-score-row select,
+.benchmark-notes textarea {
+  color: #f4f4f5;
+  background: #0d0d10;
+  border: 1px solid #303038;
+  border-radius: 9px;
+  padding: 10px 11px;
+}
+
+.benchmark-engine-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 5px;
+  background: #101013;
+  border: 1px solid #2a2a30;
+  border-radius: 12px;
+}
+
+.benchmark-engine-tabs button {
+  border: 0;
+  color: #d4d4d8;
+  background: transparent;
+  border-radius: 8px;
+  padding: 11px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.benchmark-engine-tabs button.active {
+  background: #082f49;
+  color: #bae6fd;
+}
+
+.benchmark-overview,
+.benchmark-card,
+.benchmark-score-card,
+.benchmark-input-warning {
+  background: linear-gradient(180deg, rgba(24,24,28,.98), rgba(15,15,18,.98));
+  border: 1px solid #2a2a30;
+  border-radius: 16px;
+}
+
+.benchmark-overview {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 18px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.benchmark-overview h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.benchmark-overview p {
+  color: #a1a1aa;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.benchmark-expected {
+  display: grid;
+  gap: 8px;
+  align-content: center;
+  padding: 14px;
+  border-radius: 12px;
+  background: #0d0d10;
+  border: 1px solid #27272a;
+}
+
+.benchmark-expected span {
+  color: #c4c4cc;
+  line-height: 1.5;
+  font-size: 13px;
+}
+
+.benchmark-input-warning {
+  display: grid;
+  gap: 7px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  border-color: #854d0e;
+  background: rgba(120,53,15,.18);
+}
+
+.benchmark-input-warning span {
+  color: #fde68a;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.benchmark-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, .65fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.benchmark-left {
+  display: grid;
+  gap: 14px;
+}
+
+.benchmark-card {
+  overflow: hidden;
+}
+
+.benchmark-card-head,
+.benchmark-score-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 15px 16px;
+  border-bottom: 1px solid #2a2a30;
+}
+
+.benchmark-card-head h3,
+.benchmark-score-head h3 {
+  margin: 0;
+}
+
+.benchmark-prompt {
+  margin: 0;
+  padding: 18px;
+  min-height: 330px;
+  max-height: 54vh;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #09090b;
+  color: #b7f7d8;
+  font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.benchmark-clean {
+  color: #6ee7b7;
+  padding: 0 16px 16px;
+}
+
+.benchmark-issues {
+  display: grid;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.benchmark-issue {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 9px;
+  background: #0d0d10;
+  border-left: 3px solid #38bdf8;
+  font-size: 12px;
+}
+
+.benchmark-issue.warning { border-left-color: #fbbf24; }
+.benchmark-issue.error { border-left-color: #fb7185; }
+.benchmark-issue span { color: #c4c4cc; line-height: 1.45; }
+
+.benchmark-recipe-card {
+  padding: 16px;
+}
+
+.benchmark-recipe-card dl {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+}
+
+.benchmark-recipe-card dl > div {
+  padding: 10px;
+  border-radius: 9px;
+  background: #0d0d10;
+}
+
+.benchmark-recipe-card dt {
+  color: #71717a;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.benchmark-recipe-card dd {
+  margin: 5px 0 0;
+  font-size: 12px;
+  word-break: break-word;
+}
+
+.benchmark-score-card {
+  position: sticky;
+  top: 14px;
+  overflow: hidden;
+}
+
+.benchmark-score-head span {
+  color: #8b8b95;
+  font-size: 12px;
+}
+
+.benchmark-score-list {
+  display: grid;
+}
+
+.benchmark-score-row {
+  display: grid;
+  grid-template-columns: 1fr 72px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #242429;
+}
+
+.benchmark-score-row > span {
+  display: grid;
+  gap: 4px;
+}
+
+.benchmark-score-row small {
+  color: #8b8b95;
+  line-height: 1.35;
+}
+
+.benchmark-score-row select {
+  width: 100%;
+}
+
+.benchmark-notes {
+  display: grid;
+  gap: 7px;
+  padding: 15px;
+}
+
+.benchmark-notes textarea {
+  width: 100%;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.benchmark-export {
+  width: calc(100% - 30px);
+  margin: 0 15px;
+  background: #0891b2;
+  border-color: #0e7490;
+}
+
+.benchmark-threshold {
+  color: #71717a;
+  font-size: 11px;
+  line-height: 1.45;
+  padding: 0 15px 15px;
+  margin: 10px 0 0;
+}
+
+@media (max-width: 1000px) {
+  .benchmark-grid,
+  .benchmark-overview {
+    grid-template-columns: 1fr;
+  }
+  .benchmark-score-card { position: static; }
+}
+
+@media (max-width: 680px) {
+  .benchmark-shell { width: min(100% - 20px, 1500px); }
+  .benchmark-header { flex-direction: column; align-items: flex-start; }
+  .benchmark-toolbar { grid-template-columns: 1fr; }
+  .benchmark-recipe-card dl { grid-template-columns: 1fr 1fr; }
+  .benchmark-launch { right: 10px; bottom: 10px; }
+}
