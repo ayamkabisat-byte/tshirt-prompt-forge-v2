@@ -1,11 +1,14 @@
 import { STYLE_MAP } from '../data/styles.js'
 import { parsePaletteInput, resolvedColorCountMode } from './shared.js'
 
+const ABSTRACT_STYLES = new Set(['pure-abstract-geo', 'abstract-geometric', 'surreal-collage'])
+
 export function analyzeRecipe(recipe) {
   const issues = []
   const primary = STYLE_MAP[recipe.primaryStyle]
   const secondary = recipe.secondaryStyle && recipe.secondaryStyle !== 'none' ? STYLE_MAP[recipe.secondaryStyle] : null
   const styles = [primary, secondary].filter(Boolean)
+  const styleIds = [recipe.primaryStyle, recipe.secondaryStyle].filter(Boolean)
   const palette = parsePaletteInput(recipe.paletteInput)
   const colorPolicy = resolvedColorCountMode(recipe)
 
@@ -19,6 +22,10 @@ export function analyzeRecipe(recipe) {
 
   if (recipe.vectorReady && recipe.allowGradients) {
     issues.push({ level: 'warning', code: 'VECTOR_GRADIENT', message: 'Vector Ready + gradients is possible, but it reduces easy tracing. Disable gradients for the cleanest separations.' })
+  }
+
+  if (recipe.printMethod === 'screenprint' && colorPolicy === 'full') {
+    issues.push({ level: 'warning', code: 'SCREENPRINT_FULL_COLOR', message: 'Full Color conflicts with the spot-color Screen Print workflow. Use Auto or Limited Palette, or switch to DTG/DTF.' })
   }
 
   if (recipe.printMethod === 'screenprint' && colorPolicy !== 'full' && Number(recipe.maxColors) > 8) {
@@ -37,6 +44,10 @@ export function analyzeRecipe(recipe) {
     issues.push({ level: 'error', code: 'OMNI_VERSION', message: 'Midjourney Omni Reference requires V7. Switch MJ model to V7 or disable Omni Reference.' })
   }
 
+  if (recipe.useOmniReference && !String(recipe.omniReference || '').trim()) {
+    issues.push({ level: 'warning', code: 'OMNI_EMPTY', message: 'Omni Reference is enabled but no Omni Reference URL is supplied.' })
+  }
+
   if (recipe.colorMode === 'manual' && palette.length === 0) {
     issues.push({ level: 'warning', code: 'PALETTE_EMPTY', message: 'Manual palette mode is selected, but the palette input is empty.' })
   }
@@ -53,12 +64,16 @@ export function analyzeRecipe(recipe) {
     issues.push({ level: 'info', code: 'BIKER_PATCH_TEXT', message: 'Biker Rocker Patches is enabled, but no top or bottom text is provided yet.' })
   }
 
-  if (recipe.referenceFidelity === 'strict' && ['pure-abstract-geo', 'abstract-geometric', 'surreal-collage'].includes(recipe.primaryStyle)) {
+  if (recipe.referenceFidelity === 'strict' && styleIds.some((id) => ABSTRACT_STYLES.has(id))) {
     issues.push({ level: 'warning', code: 'STRICT_ABSTRACT', message: 'Strict reference fidelity can fight with very abstract styles. Balanced fidelity may produce a cleaner result.' })
   }
 
   if (recipe.vectorReady && styles.some((style) => Number(style?.vectorScore || 3) <= 2)) {
     issues.push({ level: 'warning', code: 'STYLE_VECTOR', message: 'One selected style is texture-heavy. Vector Ready will simplify part of its original character.' })
+  }
+
+  if (recipe.logoIntegration === 'image' && !String(recipe.logoReference || '').trim()) {
+    issues.push({ level: 'warning', code: 'LOGO_REFERENCE_EMPTY', message: 'Logo Image Reference is enabled but no logo reference URL is supplied for Midjourney.' })
   }
 
   return issues
@@ -71,6 +86,10 @@ export function optimizeRecipe(recipe) {
     next.edge = next.edge === 'fade' ? 'organic' : next.edge
     if (!['dtg', 'dtf'].includes(next.printMethod)) next.allowGradients = false
     if (next.printMethod === 'screenprint' && Number(next.maxColors) > 8) next.maxColors = 8
+  }
+
+  if (next.printMethod === 'screenprint' && resolvedColorCountMode(next) === 'full') {
+    next.colorCountMode = 'limited'
   }
 
   if (next.useOmniReference) next.mjModel = '7'
