@@ -217,3 +217,12 @@ input[type="range"] { padding: 3px 0; accent-color: var(--cyan); border: 0; back
 .style-example-gallery img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
 .style-example-gallery figcaption{padding:6px 8px;font-size:10px;color:#b2c7d3}
 .style-example-controls button:focus-visible,.style-examples-toggle:focus-visible{outline:2px solid #38bdf8;outline-offset:2px}
+
+/* Consistent portrait artwork previews (2:3), starting with one pilot style. */
+.style-tile-select>.style-tile-visual{width:100%;height:auto;aspect-ratio:2 / 3}
+.style-tile-visual img{width:100%;height:100%;object-fit:contain}
+.style-example-gallery{grid-template-columns:repeat(auto-fit,minmax(130px,180px))}
+.style-example-gallery img{aspect-ratio:2 / 3;object-fit:contain}
+.style-favorite-button{top:16px}
+@media(max-width:720px){.style-tile-select>.style-tile-visual{height:auto}.style-favorite-button{top:16px}}
+@media(max-width:420px){.style-tile-select{display:flex;flex-direction:column}.style-tile-select>.style-tile-visual{height:auto;grid-row:auto}.style-favorite-button{top:16px}}
