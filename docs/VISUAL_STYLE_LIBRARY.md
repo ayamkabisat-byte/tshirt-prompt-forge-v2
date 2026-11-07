@@ -4,11 +4,11 @@ The UI Style Library is a presentation layer. It does not change the 65 migrated
 
 ## Pilot first: one style
 
-Start by adding **one example artwork for one selected style**. Confirm the gallery presentation at desktop and mobile sizes before producing the remaining 64 style examples. Further examples for a style are optional.
+The first seven Streetwear & Subculture examples are linked to the supplied Google Drive folder. Add further images incrementally; do not require all 65 styles to be illustrated before shipping. Further examples for a style are optional.
 
 ## Adding example artwork later
 
-1. Add a licensed or self-created image under `public/style-examples/` (prefer optimized WebP).
+1. Add a licensed or self-created image under `public/style-examples/` (prefer optimized WebP), or use a publicly accessible HTTPS image URL. Drive-hosted thumbnails require suitable sharing permissions and may not load for every visitor.
 2. Add `examples: ['/style-examples/<filename-1>.webp', '/style-examples/<filename-2>.webp']` to the matching style object in `src/data/styles/<category>.js`.
 3. The gallery shows the first example by default, with previous/next controls for multiple examples and a full selected-style gallery. Without an image, it shows a neutral placeholder.
 4. Optionally add `shortDescription` to the style object. Otherwise the gallery derives a readable first sentence from `graphicPrompt` or `prompt`.
@@ -38,7 +38,7 @@ Images are for **UI discovery only**. They are not silently attached as image re
 ## Image preparation
 
 - Use only artwork you own or have permission to display.
-- Use a consistent portrait **2:3** canvas. Recommended export: **800 × 1200 px**, optimized WebP. The UI uses the same 2:3 frame without cropping the artwork.
+- Use a consistent portrait **3:4** canvas. Recommended export: **900 × 1200 px**, optimized WebP. The UI uses the same 3:4 frame without cropping the artwork.
 - Prefer distinct, representative examples instead of slight variations.
 - Keep the style ID unchanged; image filenames are independent of prompt rules.
 - The gallery does not upload images or send examples to AI models. Add image assets through the repository for now.
