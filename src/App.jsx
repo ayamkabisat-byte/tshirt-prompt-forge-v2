@@ -83,6 +83,8 @@ export default function App() {
   const [secondaryQuery, setSecondaryQuery] = useState('')
   const [styleCategory, setStyleCategory] = useState('all')
   const [advancedStyles, setAdvancedStyles] = useState(false)
+  const [activeStep, setActiveStep] = useState('subject')
+  const [showAllPanels, setShowAllPanels] = useState(false)
 
   const set = (key, value) => setRecipe((current) => ({ ...current, [key]: value }))
   const toggleMix = (id) => setRecipe((current) => ({
@@ -151,9 +153,17 @@ export default function App() {
         </div>
       </section>
 
+      <nav className="forge-step-nav" aria-label="Design workflow">
+        {[
+          ['subject','01','Subject'],['style','02','Style'],['layout','03','Layout & Type'],
+          ['production','04','Print & Color'],['output','05','Prompt & Models'],
+        ].map(([id,num,label])=><button key={id} type="button" className={activeStep===id&&!showAllPanels?'active':''} aria-current={activeStep===id&&!showAllPanels?'step':undefined} onClick={()=>{setShowAllPanels(false);setActiveStep(id)}}><span>{num}</span>{label}</button>)}
+        <button type="button" className={showAllPanels?'active':''} aria-pressed={showAllPanels} onClick={()=>setShowAllPanels(v=>!v)}>≡ All Controls</button>
+      </nav>
+      <p className="forge-step-help">Settings stay saved while you switch steps. Choose All Controls for the original full editor.</p>
       <section className="workspace">
         <div className="controls-column">
-          <Panel number="1" title="Subject & Reference" description="Choose whether you are creating new artwork, transforming a reference, a logo, graphic-only art, or tattoo artwork.">
+          <Panel visible={showAllPanels || activeStep === 'subject'} number="1" title="Subject & Reference" description="Choose whether you are creating new artwork, transforming a reference, a logo, graphic-only art, or tattoo artwork.">
             <ButtonGrid items={SUBJECT_MODES} active={recipe.subjectMode} onChange={(value) => set('subjectMode', value)} />
 
             <Field label="Core concept / subject / action">
@@ -200,7 +210,7 @@ export default function App() {
             )}
           </Panel>
 
-          <Panel number="2" title="Style Engine" description="All original v1 style IDs are available. Mix a secondary style only when it adds something useful.">
+          <Panel visible={showAllPanels || activeStep === 'style'} number="2" title="Style Engine" description="All original v1 style IDs are available. Mix a secondary style only when it adds something useful.">
             <StyleGallery
               value={recipe.primaryStyle}
               onChange={(value) => set('primaryStyle', value)}
@@ -250,7 +260,7 @@ export default function App() {
             </div>
           </Panel>
 
-          <Panel number="3" title="Mix & Match Elements" description="The original v1 mix switches are preserved, but now compile into explicit visual instructions.">
+          <Panel visible={showAllPanels || activeStep === 'style'} number="3" title="Mix & Match Elements" description="The original v1 mix switches are preserved, but now compile into explicit visual instructions.">
             <div className="chip-grid">
               {MIX_ELEMENTS.map((item) => (
                 <button
@@ -265,7 +275,7 @@ export default function App() {
             </div>
           </Panel>
 
-          <Panel number="4" title="Composition & Production" description="Production rules change depending on Screen Print, DTF, or DTG. DTF/DTG are full-color raster by default.">
+          <Panel visible={showAllPanels || activeStep === 'production' || activeStep === 'layout'} number="4" title="Composition & Production" description="Production rules change depending on Screen Print, DTF, or DTG. DTF/DTG are full-color raster by default.">
             <div className="three-col">
               <Field label="Composition">
                 <select value={recipe.composition} onChange={(e) => set('composition', e.target.value)}>
@@ -336,7 +346,7 @@ export default function App() {
             </div>
           </Panel>
 
-          <Panel number="5" title="Typography & Logo Integration" description="Readable text is compiled separately from decorative micro-text, preventing the old v1 text contradictions.">
+          <Panel visible={showAllPanels || activeStep === 'layout'} number="5" title="Typography & Logo Integration" description="Readable text is compiled separately from decorative micro-text, preventing the old v1 text contradictions.">
             <div className="three-col">
               <Field label="Top text"><input value={recipe.textTop} onChange={(e) => set('textTop', e.target.value)} placeholder="Exact text" /></Field>
               <Field label="Subtitle"><input value={recipe.textSub} onChange={(e) => set('textSub', e.target.value)} placeholder="Exact text" /></Field>
@@ -374,7 +384,7 @@ export default function App() {
             )}
           </Panel>
 
-          <Panel number="6" title="Extra Prompt Shaping" description="Use these only for details not already covered by the structured recipe.">
+          <Panel visible={showAllPanels || activeStep === 'output'} number="6" title="Extra Prompt Shaping" description="Use these only for details not already covered by the structured recipe.">
             <Field label="Extra direction / emphasis">
               <textarea
                 value={recipe.extraPrompt}
@@ -393,7 +403,7 @@ export default function App() {
             </Field>
           </Panel>
 
-          <Panel number="7" title="Midjourney Controls" description="Only Midjourney-specific syntax is generated here; parameters are appended at the end of the prompt.">
+          <Panel visible={showAllPanels || activeStep === 'output'} number="7" title="Midjourney Controls" description="Only Midjourney-specific syntax is generated here; parameters are appended at the end of the prompt.">
             <div className="three-col">
               <Field label="Model">
                 <select value={recipe.mjModel} onChange={(e) => set('mjModel', e.target.value)}>
@@ -427,7 +437,7 @@ export default function App() {
             <Field label="Seed (optional)"><input value={recipe.seed} onChange={(e) => set('seed', e.target.value.replace(/\D/g, ''))} placeholder="Numeric seed" /></Field>
           </Panel>
 
-          <Panel number="8" title="Flow / Nano Banana" description="Flow receives structured natural-language instructions rather than Midjourney parameter syntax.">
+          <Panel visible={showAllPanels || activeStep === 'output'} number="8" title="Flow / Nano Banana" description="Flow receives structured natural-language instructions rather than Midjourney parameter syntax.">
             <Field label="Flow image model">
               <select value={recipe.flowModel} onChange={(e) => set('flowModel', e.target.value)}>
                 {FLOW_MODELS.map((item) => <option key={item.id} value={item.id}>{item.label} — {item.note}</option>)}
@@ -482,7 +492,8 @@ export default function App() {
   )
 }
 
-function Panel({ number, title, description, children }) {
+function Panel({ number, title, description, children, visible = true }) {
+  if (!visible) return null
   return (
     <section className="panel">
       <div className="panel-heading">
