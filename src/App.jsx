@@ -81,6 +81,8 @@ export default function App() {
   const [copied, setCopied] = useState('')
   const [primaryQuery, setPrimaryQuery] = useState('')
   const [secondaryQuery, setSecondaryQuery] = useState('')
+  const [styleCategory, setStyleCategory] = useState('all')
+  const [advancedStyles, setAdvancedStyles] = useState(false)
 
   const set = (key, value) => setRecipe((current) => ({ ...current, [key]: value }))
   const toggleMix = (id) => setRecipe((current) => ({
@@ -199,33 +201,39 @@ export default function App() {
           </Panel>
 
           <Panel number="2" title="Style Engine" description="All original v1 style IDs are available. Mix a secondary style only when it adds something useful.">
-            <StylePicker
-              label="Primary style"
+            <StyleGallery
               value={recipe.primaryStyle}
               onChange={(value) => set('primaryStyle', value)}
               query={primaryQuery}
               onQueryChange={setPrimaryQuery}
+              category={styleCategory}
+              onCategoryChange={setStyleCategory}
             />
             <StyleInfo style={primaryStyle} role="Primary" />
-
-            <StylePicker
-              label="Secondary style"
-              value={recipe.secondaryStyle}
-              onChange={(value) => set('secondaryStyle', value)}
-              query={secondaryQuery}
-              onQueryChange={setSecondaryQuery}
-              allowNone
-            />
-
-            {secondaryStyle && (
-              <>
-                <StyleInfo style={secondaryStyle} role="Secondary" />
-                <Field label="Fusion method">
-                  <select value={recipe.fusionMode} onChange={(e) => set('fusionMode', e.target.value)}>
-                    {FUSION_MODES.map((mode) => <option key={mode.id} value={mode.id}>{mode.label}</option>)}
-                  </select>
-                </Field>
-              </>
+            <button type="button" className="advanced-style-toggle" aria-expanded={advancedStyles} onClick={() => setAdvancedStyles((current) => !current)}>
+              {advancedStyles ? '− Hide' : '+ Show'} secondary style & fusion settings
+            </button>
+            {advancedStyles && (
+              <div className="advanced-style-content">
+                <StylePicker
+                  label="Secondary style"
+                  value={recipe.secondaryStyle}
+                  onChange={(value) => set('secondaryStyle', value)}
+                  query={secondaryQuery}
+                  onQueryChange={setSecondaryQuery}
+                  allowNone
+                />
+                {secondaryStyle && (
+                  <>
+                    <StyleInfo style={secondaryStyle} role="Secondary" />
+                    <Field label="Fusion method">
+                      <select value={recipe.fusionMode} onChange={(e) => set('fusionMode', e.target.value)}>
+                        {FUSION_MODES.map((mode) => <option key={mode.id} value={mode.id}>{mode.label}</option>)}
+                      </select>
+                    </Field>
+                  </>
+                )}
+              </div>
             )}
 
             <div className="two-col">
@@ -504,6 +512,50 @@ function ButtonGrid({ items, active, onChange }) {
       ))}
     </div>
   )
+}
+
+function StyleGallery({ value, onChange, query, onQueryChange, category, onCategoryChange }) {
+  const normalizedQuery = query.trim().toLowerCase()
+  const filtered = STYLE_CATEGORIES.flatMap((group) =>
+    group.styles.filter((style) =>
+      (category === 'all' || group.name === category) &&
+      (!normalizedQuery || [style.label, style.id, group.name, style.prompt].some((part) => (part || '').toLowerCase().includes(normalizedQuery)))
+    )
+  )
+  const selectedStyle = STYLE_MAP[value]
+  return (
+    <div className="style-gallery">
+      <div className="style-gallery-heading">
+        <div><strong>Explore 65 visual styles</strong><p>Search by name, category, or visual characteristic. All existing presets remain available.</p></div>
+        <span>{filtered.length} styles</span>
+      </div>
+      <input aria-label="Search visual styles" value={query} onChange={(e) => onQueryChange(e.target.value)} placeholder="Search e.g. racing, halftone, geometry..." />
+      <div className="style-category-tabs" role="group" aria-label="Filter style category">
+        <button type="button" aria-pressed={category === 'all'} className={category === 'all' ? 'active' : ''} onClick={() => onCategoryChange('all')}>All</button>
+        {STYLE_CATEGORIES.map((group) => <button type="button" key={group.name} aria-pressed={category === group.name} className={category === group.name ? 'active' : ''} onClick={() => onCategoryChange(group.name)}>{group.name}</button>)}
+      </div>
+      <div className="style-gallery-grid">
+        {filtered.map((style) => (
+          <button type="button" key={style.id} className={value === style.id ? 'style-tile active' : 'style-tile'} aria-pressed={value === style.id} onClick={() => onChange(style.id)}>
+            <span className="style-tile-visual" aria-hidden="true">{style.examples?.[0] ? <img src={style.examples[0]} alt="" loading="lazy" /> : <span className="style-tile-placeholder"><span>✳</span><small>Example coming soon</small></span>}</span>
+            <strong>{style.label}</strong>
+            <small>{style.category}</small>
+            <span className="style-tile-description">{style.shortDescription || describeStyle(style)}</span>
+            <span className="style-tile-score">Vector {style.vectorScore ?? 3}/5 · Text {style.textAffinity ?? 'medium'}</span>
+          </button>
+        ))}
+      </div>
+      {filtered.length === 0 && <p className="helper">No matching styles. Try another search or category.</p>}
+      {selectedStyle && <p className="helper">Selected: <strong>{selectedStyle.label}</strong>. The gallery is a style guide, not an image reference sent to the AI model.</p>}
+    </div>
+  )
+}
+
+function describeStyle(style) {
+  const source = style.graphicPrompt || style.prompt || ''
+  const sentence = source.split(/[.!?]/)[0].trim()
+  if (!sentence) return 'Art direction preset for apparel graphics.'
+  return sentence.length > 165 ? sentence.slice(0, 162).trimEnd() + '…' : sentence
 }
 
 function StylePicker({ label, value, onChange, query, onQueryChange, allowNone = false }) {
