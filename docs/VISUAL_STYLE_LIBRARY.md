@@ -2,6 +2,10 @@
 
 The UI Style Library is a presentation layer. It does not change the 65 migrated style IDs, design recipe, style compiler, or Flow/Midjourney output.
 
+## Pilot first: one style
+
+Start by adding **one example artwork for one selected style**. Confirm the gallery presentation at desktop and mobile sizes before producing the remaining 64 style examples. Further examples for a style are optional.
+
 ## Adding example artwork later
 
 1. Add a licensed or self-created image under `public/style-examples/` (prefer optimized WebP).
@@ -34,7 +38,7 @@ Images are for **UI discovery only**. They are not silently attached as image re
 ## Image preparation
 
 - Use only artwork you own or have permission to display.
-- Export square or near-square thumbnails as optimized WebP (recommended 600–1000 px).
+- Use a consistent portrait **2:3** canvas. Recommended export: **800 × 1200 px**, optimized WebP. The UI uses the same 2:3 frame without cropping the artwork.
 - Prefer distinct, representative examples instead of slight variations.
 - Keep the style ID unchanged; image filenames are independent of prompt rules.
 - The gallery does not upload images or send examples to AI models. Add image assets through the repository for now.
