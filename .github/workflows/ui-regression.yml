@@ -16,3 +16,19 @@ jobs:
       - run: npm test
       - run: npm run lint
       - run: npm run build
+      - name: Install browser smoke test dependencies
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Run Vite preview and browser smoke tests
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/vite-preview.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ > /dev/null && break; sleep 1; done
+          node tests/ui-smoke.mjs
+      - name: Upload desktop and mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-screenshots
+          path: artifacts/ui/
+          if-no-files-found: ignore
