@@ -574,18 +574,35 @@ function ButtonGrid({ items, active, onChange }) {
 }
 
 function StyleGallery({ value, onChange, query, onQueryChange, category, onCategoryChange }) {
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('tshirt-forge-style-favorites') || '[]')
+      return Array.isArray(stored) ? stored.filter((id) => typeof id === 'string' && Boolean(STYLE_MAP[id])) : []
+    } catch {
+      return []
+    }
+  })
+  const [favoritesOnly, setFavoritesOnly] = useState(false)
   const normalizedQuery = query.trim().toLowerCase()
   const filtered = STYLE_CATEGORIES.flatMap((group) =>
     group.styles.filter((style) =>
       (category === 'all' || group.name === category) &&
-      (!normalizedQuery || [style.label, style.id, group.name, style.prompt].some((part) => (part || '').toLowerCase().includes(normalizedQuery)))
+      (!favoritesOnly || favorites.includes(style.id)) &&
+      (!normalizedQuery || [style.label, style.id, group.name, style.prompt, style.shortDescription].some((part) => (part || '').toLowerCase().includes(normalizedQuery)))
     )
   )
   const selectedStyle = STYLE_MAP[value]
+  const toggleFavorite = (id) => {
+    setFavorites((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
+      try { localStorage.setItem('tshirt-forge-style-favorites', JSON.stringify(next)) } catch { /* Storage may be unavailable. */ }
+      return next
+    })
+  }
   return (
     <div className="style-gallery">
       <div className="style-gallery-heading">
-        <div><strong>Explore 65 visual styles</strong><p>Search by name, category, or visual characteristic. All existing presets remain available.</p></div>
+        <div><strong>Explore {V1_STYLE_COUNT} visual styles</strong><p>Choose a style by its visual characteristics. Examples can be added later without changing prompts.</p></div>
         <span>{filtered.length} styles</span>
       </div>
       <input aria-label="Search visual styles" value={query} onChange={(e) => onQueryChange(e.target.value)} placeholder="Search e.g. racing, halftone, geometry..." />
@@ -593,19 +610,29 @@ function StyleGallery({ value, onChange, query, onQueryChange, category, onCateg
         <button type="button" aria-pressed={category === 'all'} className={category === 'all' ? 'active' : ''} onClick={() => onCategoryChange('all')}>All</button>
         {STYLE_CATEGORIES.map((group) => <button type="button" key={group.name} aria-pressed={category === group.name} className={category === group.name ? 'active' : ''} onClick={() => onCategoryChange(group.name)}>{group.name}</button>)}
       </div>
+      <label className="style-favorites-filter"><input type="checkbox" checked={favoritesOnly} onChange={(e) => setFavoritesOnly(e.target.checked)} /> ★ Favorites only ({favorites.length})</label>
       <div className="style-gallery-grid">
         {filtered.map((style) => (
-          <button type="button" key={style.id} className={value === style.id ? 'style-tile active' : 'style-tile'} aria-pressed={value === style.id} onClick={() => onChange(style.id)}>
-            <span className="style-tile-visual" aria-hidden="true">{style.examples?.[0] ? <img src={style.examples[0]} alt="" loading="lazy" /> : <span className="style-tile-placeholder"><span>✳</span><small>Example coming soon</small></span>}</span>
-            <strong>{style.label}</strong>
-            <small>{style.category}</small>
-            <span className="style-tile-description">{style.shortDescription || describeStyle(style)}</span>
-            <span className="style-tile-score">Vector {style.vectorScore ?? 3}/5 · Text {style.textAffinity ?? 'medium'}</span>
-          </button>
+          <div key={style.id} className={value === style.id ? 'style-tile active' : 'style-tile'}>
+            <button type="button" className="style-tile-select" aria-pressed={value === style.id} onClick={() => onChange(style.id)}>
+              <span className="style-tile-visual" aria-hidden="true">{style.examples?.[0] ? <img src={style.examples[0]} alt="" loading="lazy" /> : <span className="style-tile-placeholder"><span>✳</span><small>Example coming soon</small></span>}</span>
+              <strong>{style.label}</strong>
+              <small>{style.category}</small>
+              <span className="style-tile-description">{style.shortDescription || describeStyle(style)}</span>
+              <span className="style-tile-score">Vector {style.vectorScore ?? 3}/5 · Text {style.textAffinity ?? 'medium'}</span>
+            </button>
+            <button type="button" className="style-favorite-button" aria-label={favorites.includes(style.id) ? `Remove ${style.label} from favorites` : `Add ${style.label} to favorites`} aria-pressed={favorites.includes(style.id)} onClick={() => toggleFavorite(style.id)}>{favorites.includes(style.id) ? '★' : '☆'}</button>
+          </div>
         ))}
       </div>
-      {filtered.length === 0 && <p className="helper">No matching styles. Try another search or category.</p>}
-      {selectedStyle && <p className="helper">Selected: <strong>{selectedStyle.label}</strong>. The gallery is a style guide, not an image reference sent to the AI model.</p>}
+      {filtered.length === 0 && <p className="helper">No matching styles. Try another search, category, or turn off Favorites only.</p>}
+      {selectedStyle && <div className="style-selected-detail" aria-live="polite">
+        <strong>Selected: {selectedStyle.label}</strong>
+        <p>{selectedStyle.shortDescription || describeStyle(selectedStyle)}</p>
+        <div className="style-detail-tags"><span>Vector suitability: {selectedStyle.vectorScore ?? 3}/5</span><span>Typography affinity: {selectedStyle.textAffinity ?? 'medium'}</span></div>
+        {selectedStyle.rules?.length > 0 && <p><b>Visual rules:</b> {selectedStyle.rules.join(' ')}</p>}
+        <small>Examples are for style discovery only; they are not automatically sent to image-generation models.</small>
+      </div>}
     </div>
   )
 }
