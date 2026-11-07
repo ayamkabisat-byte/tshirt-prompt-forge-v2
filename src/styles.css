@@ -178,3 +178,11 @@ input[type="range"] { padding: 3px 0; accent-color: var(--cyan); border: 0; back
 .recipe-import-button input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
 .recipe-import-button:focus-within{outline:2px solid var(--cyan);outline-offset:2px}
 .recipe-notice{margin:12px 0 0;padding:10px 14px;border:1px solid #31546b;border-radius:10px;background:#11202b;color:#c7eaff;font-size:12px}
+
+.forge-step-progress{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 2px 2px;color:var(--muted);font-size:12px}
+.forge-step-progress>div{display:flex;gap:8px}
+.forge-step-progress button{min-height:40px;border:1px solid var(--line);border-radius:9px;background:#19191e;padding:8px 14px;color:#e4e4e7;font-size:12px;font-weight:700;cursor:pointer}
+.forge-step-progress button:disabled{opacity:.4;cursor:not-allowed}
+.forge-step-progress button:not(:disabled):hover{border-color:var(--cyan)}
+.forge-step-progress button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+@media(max-width:440px){.forge-step-progress{flex-wrap:wrap}.forge-step-progress>div{width:100%;justify-content:space-between}}
