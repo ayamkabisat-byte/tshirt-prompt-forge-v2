@@ -86,6 +86,7 @@ export default function App() {
   const [activeStep, setActiveStep] = useState('subject')
   const [showAllPanels, setShowAllPanels] = useState(false)
   const [recipeNotice, setRecipeNotice] = useState('')
+  const [advancedModelControls, setAdvancedModelControls] = useState(false)
 
   const set = (key, value) => setRecipe((current) => ({ ...current, [key]: value }))
   const toggleMix = (id) => setRecipe((current) => ({
@@ -195,6 +196,13 @@ export default function App() {
         <button type="button" className={showAllPanels?'active':''} aria-pressed={showAllPanels} onClick={()=>setShowAllPanels(v=>!v)}>≡ All Controls</button>
       </nav>
       <p className="forge-step-help">Settings stay saved while you switch steps. Choose All Controls for the original full editor.</p>
+      <div className="forge-step-progress" aria-label="Workflow progress">
+        <span>{showAllPanels ? 'All controls visible' : `Step ${['subject','style','layout','production','output'].indexOf(activeStep) + 1} of 5`}</span>
+        <div>
+          <button type="button" disabled={showAllPanels || activeStep === 'subject'} onClick={() => setActiveStep((current) => ['subject','style','layout','production','output'][Math.max(0, ['subject','style','layout','production','output'].indexOf(current)-1)])}>← Previous</button>
+          <button type="button" disabled={showAllPanels || activeStep === 'output'} onClick={() => setActiveStep((current) => ['subject','style','layout','production','output'][Math.min(4, ['subject','style','layout','production','output'].indexOf(current)+1)])}>Next →</button>
+        </div>
+      </div>
       <section className="workspace">
         <div className="controls-column">
           <Panel visible={showAllPanels || activeStep === 'subject'} number="1" title="Subject & Reference" description="Choose whether you are creating new artwork, transforming a reference, a logo, graphic-only art, or tattoo artwork.">
@@ -456,6 +464,8 @@ export default function App() {
               <Toggle label="Raw Mode" checked={recipe.raw} onChange={(value) => set('raw', value)} />
             </div>
 
+            <button type="button" className="advanced-style-toggle" aria-expanded={advancedModelControls} onClick={() => setAdvancedModelControls((value) => !value)}>{advancedModelControls ? '− Hide' : '+ Show'} advanced references & seed</button>
+            {advancedModelControls && <div className="advanced-style-content">
             <Field label="Style Reference URL / code">
               <input value={recipe.styleReference} onChange={(e) => set('styleReference', e.target.value)} placeholder="Optional --sref value" />
             </Field>
@@ -472,6 +482,7 @@ export default function App() {
             )}
 
             <Field label="Seed (optional)"><input value={recipe.seed} onChange={(e) => set('seed', e.target.value.replace(/\D/g, ''))} placeholder="Numeric seed" /></Field>
+            </div>}
           </Panel>
 
           <Panel visible={showAllPanels || activeStep === 'output'} number="8" title="Flow / Nano Banana" description="Flow receives structured natural-language instructions rather than Midjourney parameter syntax.">
