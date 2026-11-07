@@ -230,3 +230,12 @@ input[type="range"] { padding: 3px 0; accent-color: var(--cyan); border: 0; back
 /* Updated artwork presentation standard: 3:4 portrait. */
 .style-tile-select>.style-tile-visual{aspect-ratio:3 / 4}
 .style-example-gallery img{aspect-ratio:3 / 4}
+
+/* Full-height visual library: show complete 3:4 artwork, no nested gallery clipping. */
+.style-gallery-grid{max-height:none;overflow:visible;align-items:start}
+.style-tile{align-self:start}
+.style-tile-select>.style-tile-visual{display:block;width:100%;height:auto;aspect-ratio:3 / 4;overflow:hidden}
+.style-tile-select>.style-tile-visual img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}
+.style-tile-select>.style-tile-visual .style-tile-placeholder{width:100%;height:100%;place-content:center}
+@media(max-width:720px){.style-gallery-grid{max-height:none;overflow:visible}}
+@media(max-width:420px){.style-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.style-tile-select{padding:6px}.style-tile-select>.style-tile-visual{aspect-ratio:3 / 4}.style-tile-select>.style-tile-description{-webkit-line-clamp:2}}
