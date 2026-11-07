@@ -85,6 +85,7 @@ export default function App() {
   const [advancedStyles, setAdvancedStyles] = useState(false)
   const [activeStep, setActiveStep] = useState('subject')
   const [showAllPanels, setShowAllPanels] = useState(false)
+  const [recipeNotice, setRecipeNotice] = useState('')
 
   const set = (key, value) => setRecipe((current) => ({ ...current, [key]: value }))
   const toggleMix = (id) => setRecipe((current) => ({
@@ -123,6 +124,36 @@ export default function App() {
     window.setTimeout(() => setCopied(''), 1800)
   }
 
+  const exportRecipe = () => {
+    const blob = new Blob([JSON.stringify({ format: 'tshirt-prompt-forge-recipe', version: 1, recipe }, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = 'tshirt-forge-recipe.json'
+    anchor.click()
+    URL.revokeObjectURL(url)
+    setRecipeNotice('Recipe exported as JSON.')
+  }
+
+  const importRecipe = async (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    try {
+      if (file.size > 100000) throw new Error('Recipe file is too large.')
+      const data = JSON.parse(await file.text())
+      if (data?.format !== 'tshirt-prompt-forge-recipe' || data.version !== 1 || !data.recipe || typeof data.recipe !== 'object' || Array.isArray(data.recipe)) throw new Error('Invalid or unsupported recipe format.')
+      if (!STYLE_MAP[data.recipe.primaryStyle] || (data.recipe.secondaryStyle !== 'none' && !STYLE_MAP[data.recipe.secondaryStyle])) throw new Error('Recipe contains an unknown style.')
+      const clean = Object.fromEntries(Object.keys(DEFAULT_RECIPE).filter((key) => Object.hasOwn(data.recipe, key) && typeof data.recipe[key] === typeof DEFAULT_RECIPE[key]).map((key) => [key, data.recipe[key]]))
+      clean.mixElements = { ...DEFAULT_RECIPE.mixElements, ...Object.fromEntries(Object.entries(data.recipe.mixElements || {}).filter(([key, value]) => Object.hasOwn(DEFAULT_RECIPE.mixElements, key) && typeof value === 'boolean')) }
+      setRecipe({ ...DEFAULT_RECIPE, ...clean })
+      setRecipeNotice('Recipe imported successfully.')
+    } catch (error) {
+      setRecipeNotice(error instanceof Error ? error.message : 'Unable to import recipe.')
+    } finally {
+      event.target.value = ''
+    }
+  }
+
   const resetRecipe = () => {
     setRecipe(DEFAULT_RECIPE)
     setPrimaryQuery('')
@@ -141,10 +172,13 @@ export default function App() {
         </div>
         <div className="topbar-actions">
           <button className="secondary-button" onClick={() => setRecipe(optimizeRecipe(recipe))}>Auto Optimize</button>
+          <button className="secondary-button" type="button" onClick={exportRecipe}>Export Recipe</button>
+          <label className="secondary-button recipe-import-button">Import Recipe<input type="file" accept=".json,application/json" onChange={importRecipe} /></label>
           <button className="secondary-button" onClick={resetRecipe}>Reset Recipe</button>
         </div>
       </header>
 
+      {recipeNotice && <p className="recipe-notice" role="status">{recipeNotice}</p>}
       <section className="production-strip">
         <ProductionBadge method={recipe.printMethod} />
         <div>
@@ -275,7 +309,7 @@ export default function App() {
             </div>
           </Panel>
 
-          <Panel visible={showAllPanels || activeStep === 'production' || activeStep === 'layout'} number="4" title="Composition & Production" description="Production rules change depending on Screen Print, DTF, or DTG. DTF/DTG are full-color raster by default.">
+          <Panel visible={showAllPanels || activeStep === 'layout'} number="4" title="Composition & Placement" description="Define the artwork layout, outer contour and aspect ratio.">
             <div className="three-col">
               <Field label="Composition">
                 <select value={recipe.composition} onChange={(e) => set('composition', e.target.value)}>
@@ -294,6 +328,9 @@ export default function App() {
               </Field>
             </div>
 
+          </Panel>
+
+          <Panel visible={showAllPanels || activeStep === 'production'} number="4b" title="Print & Color Engineering" description="Production rules adapt to Screen Print, DTF or DTG; no print settings are removed.">
             <div className="two-col">
               <Field label="Print method">
                 <select value={recipe.printMethod} onChange={(e) => set('printMethod', e.target.value)}>
