@@ -583,6 +583,8 @@ function StyleGallery({ value, onChange, query, onQueryChange, category, onCateg
     }
   })
   const [favoritesOnly, setFavoritesOnly] = useState(false)
+  const [exampleIndexes, setExampleIndexes] = useState({})
+  const [showExampleGallery, setShowExampleGallery] = useState(false)
   const normalizedQuery = query.trim().toLowerCase()
   const filtered = STYLE_CATEGORIES.flatMap((group) =>
     group.styles.filter((style) =>
@@ -615,12 +617,17 @@ function StyleGallery({ value, onChange, query, onQueryChange, category, onCateg
         {filtered.map((style) => (
           <div key={style.id} className={value === style.id ? 'style-tile active' : 'style-tile'}>
             <button type="button" className="style-tile-select" aria-pressed={value === style.id} onClick={() => onChange(style.id)}>
-              <span className="style-tile-visual" aria-hidden="true">{style.examples?.[0] ? <img src={style.examples[0]} alt="" loading="lazy" /> : <span className="style-tile-placeholder"><span>✳</span><small>Example coming soon</small></span>}</span>
+              <span className="style-tile-visual" aria-hidden="true">{style.examples?.length ? <img src={style.examples[exampleIndexes[style.id] || 0]} alt="" loading="lazy" /> : <span className="style-tile-placeholder"><span>✳</span><small>Example coming soon</small></span>}</span>
               <strong>{style.label}</strong>
               <small>{style.category}</small>
               <span className="style-tile-description">{style.shortDescription || describeStyle(style)}</span>
               <span className="style-tile-score">Vector {style.vectorScore ?? 3}/5 · Text {style.textAffinity ?? 'medium'}</span>
             </button>
+            {style.examples?.length > 1 && <div className="style-example-controls" aria-label={`Examples for ${style.label}`}>
+              <button type="button" aria-label={`Previous example for ${style.label}`} onClick={() => setExampleIndexes((current) => ({ ...current, [style.id]: ((current[style.id] || 0) - 1 + style.examples.length) % style.examples.length }))}>‹</button>
+              <span>{(exampleIndexes[style.id] || 0) + 1}/{style.examples.length}</span>
+              <button type="button" aria-label={`Next example for ${style.label}`} onClick={() => setExampleIndexes((current) => ({ ...current, [style.id]: ((current[style.id] || 0) + 1) % style.examples.length }))}>›</button>
+            </div>}
             <button type="button" className="style-favorite-button" aria-label={favorites.includes(style.id) ? `Remove ${style.label} from favorites` : `Add ${style.label} to favorites`} aria-pressed={favorites.includes(style.id)} onClick={() => toggleFavorite(style.id)}>{favorites.includes(style.id) ? '★' : '☆'}</button>
           </div>
         ))}
@@ -631,6 +638,10 @@ function StyleGallery({ value, onChange, query, onQueryChange, category, onCateg
         <p>{selectedStyle.shortDescription || describeStyle(selectedStyle)}</p>
         <div className="style-detail-tags"><span>Vector suitability: {selectedStyle.vectorScore ?? 3}/5</span><span>Typography affinity: {selectedStyle.textAffinity ?? 'medium'}</span></div>
         {selectedStyle.rules?.length > 0 && <p><b>Visual rules:</b> {selectedStyle.rules.join(' ')}</p>}
+        {selectedStyle.examples?.length > 0 && <>
+          <button type="button" className="style-examples-toggle" aria-expanded={showExampleGallery} onClick={() => setShowExampleGallery((current) => !current)}>{showExampleGallery ? 'Hide' : 'View'} example gallery ({selectedStyle.examples.length})</button>
+          {showExampleGallery && <div className="style-example-gallery">{selectedStyle.examples.map((src, index) => <figure key={src + index}><img src={src} alt={`${selectedStyle.label} visual example ${index + 1}`} loading="lazy" /><figcaption>Example {index + 1}</figcaption></figure>)}</div>}
+        </>}
         <small>Examples are for style discovery only; they are not automatically sent to image-generation models.</small>
       </div>}
     </div>
