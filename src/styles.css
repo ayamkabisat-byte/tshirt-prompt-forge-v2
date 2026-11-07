@@ -162,3 +162,13 @@ input[type="range"] { padding: 3px 0; accent-color: var(--cyan); border: 0; back
 @media(max-width:720px){.style-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-height:480px}.style-tile-visual{height:85px}.style-gallery-heading{flex-wrap:wrap}}
 @media(max-width:420px){.style-gallery-grid{grid-template-columns:1fr}.style-tile{display:grid;grid-template-columns:85px 1fr;column-gap:10px}.style-tile-visual{grid-row:span 4;height:90px}.style-tile-description{-webkit-line-clamp:2}}
 @media(prefers-reduced-motion:reduce){.style-tile{scroll-behavior:auto}}
+
+/* Five-stage design workflow; all existing recipe parameters remain accessible. */
+.forge-step-nav{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;padding:17px 0 8px;overscroll-behavior-x:contain}
+.forge-step-nav button{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;min-height:44px;border:1px solid #35353e;border-radius:11px;background:#16161c;color:#d2d2dc;padding:10px 14px;font-size:12px;font-weight:750;cursor:pointer}
+.forge-step-nav button span{color:#9292a3;font-size:10px}
+.forge-step-nav button.active{border-color:#38bdf8;background:#123142;color:#d7f5ff}
+.forge-step-nav button.active span{color:#9bdffb}
+.forge-step-nav button:focus-visible{outline:2px solid #38bdf8;outline-offset:2px}
+.forge-step-help{margin:0;padding:4px 2px 0;color:var(--muted);font-size:12px;line-height:1.5}
+@media(max-width:720px){.forge-step-nav{padding-top:12px}.forge-step-nav button{min-height:44px}.forge-step-help{font-size:11px}}
