@@ -226,3 +226,7 @@ input[type="range"] { padding: 3px 0; accent-color: var(--cyan); border: 0; back
 .style-favorite-button{top:16px}
 @media(max-width:720px){.style-tile-select>.style-tile-visual{height:auto}.style-favorite-button{top:16px}}
 @media(max-width:420px){.style-tile-select{display:flex;flex-direction:column}.style-tile-select>.style-tile-visual{height:auto;grid-row:auto}.style-favorite-button{top:16px}}
+
+/* Updated artwork presentation standard: 3:4 portrait. */
+.style-tile-select>.style-tile-visual{aspect-ratio:3 / 4}
+.style-example-gallery img{aspect-ratio:3 / 4}
