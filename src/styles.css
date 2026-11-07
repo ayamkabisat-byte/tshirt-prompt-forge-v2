@@ -172,3 +172,9 @@ input[type="range"] { padding: 3px 0; accent-color: var(--cyan); border: 0; back
 .forge-step-nav button:focus-visible{outline:2px solid #38bdf8;outline-offset:2px}
 .forge-step-help{margin:0;padding:4px 2px 0;color:var(--muted);font-size:12px;line-height:1.5}
 @media(max-width:720px){.forge-step-nav{padding-top:12px}.forge-step-nav button{min-height:44px}.forge-step-help{font-size:11px}}
+
+/* Portable design recipes */
+.recipe-import-button{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.recipe-import-button input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.recipe-import-button:focus-within{outline:2px solid var(--cyan);outline-offset:2px}
+.recipe-notice{margin:12px 0 0;padding:10px 14px;border:1px solid #31546b;border-radius:10px;background:#11202b;color:#c7eaff;font-size:12px}
