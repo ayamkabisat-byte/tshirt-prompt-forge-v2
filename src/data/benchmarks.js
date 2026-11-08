@@ -44,18 +44,6 @@ const BASE_RECIPE = {
   logoReference: '',
   extraPrompt: '',
   negativePrompt: 't-shirt mockup, garment photo, watermark, signature, random extra text',
-  mjModel: '8.2',
-  raw: true,
-  stylize: 100,
-  chaos: 0,
-  imageWeight: 1.5,
-  referenceUrl: '',
-  styleReference: '',
-  styleWeight: 100,
-  useOmniReference: false,
-  omniReference: '',
-  omniWeight: 100,
-  seed: '',
   flowModel: 'nano-banana-2',
 }
 
@@ -162,8 +150,6 @@ export const BENCHMARKS = [
       vectorReady: false,
       allowGradients: true,
       garmentColor: 'black',
-      mjModel: '8.2',
-      stylize: 250,
     }),
   },
   {
@@ -195,7 +181,7 @@ export const BENCHMARKS = [
     title: '06 · Strict Reference — Shonen Transformation',
     group: 'Reference',
     purpose: 'Measures identity preservation while applying a strong anime rendering language.',
-    requiresInput: ['Attach the same portrait/reference image in Flow and provide its usable image URL for Midjourney.'],
+    requiresInput: ['Attach the portrait/reference image directly in Flow as an ingredient.'],
     expected: 'Face/identity remains clearly recognizable; pose and styling may change but core features must not drift.',
     recipe: recipe({
       subjectMode: 'reference',
@@ -208,7 +194,6 @@ export const BENCHMARKS = [
       vectorReady: false,
       allowGradients: true,
       detailLevel: 'balanced',
-      imageWeight: 2,
     }),
   },
   {
@@ -240,7 +225,7 @@ export const BENCHMARKS = [
     title: '08 · Logo Transform — Luxury Badge Material',
     group: 'Logo',
     purpose: 'Checks geometry preservation while applying dimensional luxury treatment.',
-    requiresInput: ['Attach the exact same logo in Flow and provide its usable image URL for Midjourney.'],
+    requiresInput: ['Attach the logo reference image directly in Flow as an ingredient.'],
     expected: 'Logo silhouette, spacing, and spelling remain unchanged while material/ornament treatment becomes richer.',
     recipe: recipe({
       subjectMode: 'logo',
@@ -254,7 +239,6 @@ export const BENCHMARKS = [
       allowGradients: true,
       detailLevel: 'intricate',
       garmentColor: 'black',
-      imageWeight: 2,
     }),
   },
   {
@@ -329,7 +313,6 @@ export const BENCHMARKS = [
       textBottom: 'CITY SOUND 1996',
       typographyPreset: 'poster',
       mixElements: mix({ vintage: true, halftoneDots: true }),
-      stylize: 200,
     }),
   },
   {
