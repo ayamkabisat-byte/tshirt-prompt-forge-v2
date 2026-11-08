@@ -54,7 +54,6 @@ const DEFAULT_RECIPE = {
   typographyStyle: '',
   logoIntegration: 'none',
   logoText: '',
-  logoReference: '',
 
   extraPrompt: '',
   negativePrompt: '',
@@ -390,9 +389,7 @@ export default function App() {
                   <input value={recipe.logoText} onChange={(e) => set('logoText', e.target.value)} placeholder="Optional exact brand name" />
                 </Field>
                 {recipe.logoIntegration === 'image' && (
-                  <Field label="Secondary logo image URL">
-                    <input value={recipe.logoReference} onChange={(e) => set('logoReference', e.target.value)} placeholder="https://..." />
-                  </Field>
+                  <p className="helper">Attach the secondary logo image directly in Flow as an additional reference/ingredient.</p>
                 )}
               </div>
             )}
