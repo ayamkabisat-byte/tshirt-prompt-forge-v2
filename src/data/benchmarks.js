@@ -41,7 +41,6 @@ const BASE_RECIPE = {
   typographyStyle: '',
   logoIntegration: 'none',
   logoText: '',
-  logoReference: '',
   extraPrompt: '',
   negativePrompt: 't-shirt mockup, garment photo, watermark, signature, random extra text',
   flowModel: 'nano-banana-2',
