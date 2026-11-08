@@ -77,7 +77,7 @@ test('exact typography uses double quotes while concept text is not quoted', () 
 test('Wanted Poster does not force readable bounty wording when typography is empty', () => {
   const output = buildFlowPrompt(recipe({ primaryStyle: 'poster-wanted' }))
   assert.doesNotMatch(output, /\bWANTED\b|DEAD OR ALIVE/)
-  assert.match(output, /no unrequested readable titles/)
+  assert.match(output, /Do not add large readable titles/)
 })
 
 test('screen print uses limited spot-color production language', () => {
