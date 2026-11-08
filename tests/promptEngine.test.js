@@ -268,3 +268,47 @@ test('Bobber Cult V5.1 preserves striking V-twin machinery and custom text hiera
     assert.match(output, /MACHINE/)
   }
 })
+
+test('Felix LaFlamme V2 keeps halftone optional and local in both prompt engines', () => {
+  const r = recipe({
+    primaryStyle: 'skate-laflamme', subjectMode: 'graphic',
+    idea: 'a pink cartoon character enjoying candy',
+    printMethod: 'dtg', vectorReady: false, detailLevel: 'balanced',
+  })
+  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+    assert.match(output, /halftone dots.*optional and localized/i)
+    assert.match(output, /layered cel-like shading/i)
+    assert.match(output, /varied line weight|varied-weight black hand-inked/i)
+    assert.match(output, /expressive character construction/i)
+    assert.match(output, /do not apply blanket dotted comic shading/i)
+  }
+})
+
+test('Felix LaFlamme V2 preserves identifiable characters with exaggerated acting', () => {
+  const r = recipe({
+    primaryStyle: 'skate-laflamme', subjectMode: 'reference',
+    idea: 'a familiar yellow cartoon sponge with a theatrical grin',
+    referenceFidelity: 'balanced', printMethod: 'dtf',
+    vectorReady: false, detailLevel: 'balanced',
+  })
+  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+    assert.match(output, /Preserve the subject.s defining identity/i)
+    assert.match(output, /exaggerated but recognizable anatomy/i)
+    assert.match(output, /pose, facial expression, proportions, motion and personality/i)
+    assert.match(output, /skateboards are optional motifs/i)
+  }
+})
+
+test('Felix LaFlamme V2 allows complex action comics but keeps optional gross-out effects', () => {
+  const r = recipe({
+    primaryStyle: 'skate-laflamme', subjectMode: 'graphic',
+    idea: 'an energetic arcade fighting game scene',
+    printMethod: 'dtg', vectorReady: false, detailLevel: 'intricate',
+  })
+  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+    assert.match(output, /elaborate multi-character comic scenes/i)
+    assert.match(output, /slime, dripping, skulls, monsters and skateboards are optional motifs/i)
+    assert.match(output, /dense intricate detailing/i)
+    assert.match(output, /rich digital-raster comic illustration/i)
+  }
+})
