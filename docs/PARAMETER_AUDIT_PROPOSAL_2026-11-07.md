@@ -151,3 +151,47 @@ Evidence: user screenshot of Instagram @bobbercult grid with custom-bike and cre
 - Distinction from Vintage Moto Line-Art: Bobber Cult emphasizes **narrative, custom lettering and apparel/event-merch visual hierarchy**; Vintage Moto Line-Art emphasizes **precision of the classical motorcycle and mechanical drawing**.
 - Candidate approach: bold black contour + detailed interior ink + retro screenprint-inspired composition; allow photographic or painterly processing if appropriate but do not default to clean mechanical vector.
 - Compare controlled samples: subject tiger, group photo or astronaut, alongside the identical subject in Vintage Moto Line-Art; examine lettering and poster vibe vs machine delineation.
+
+
+## Reference review: Markus Manson / Markus Wiriahadinata — 2026-11-08
+**Status:** Audit proposal only. NO changes to style presets or prompt engine until user reviews generated prompts and approves.
+
+### Sources and verification levels
+- Artist profile: https://markuswiriahadinata.artstation.com/ (ArtStation search-indexed portfolio; direct page rendering may be inaccessible to crawlers). Current title "Markus Manson — Illustrator / Graphic Designer / Tattoo Artist". Listed examples: The Portugese Wolf, The Spain Jaguar, VenomizedDragon, Vlad the Impaler, Cyborg Hades, Bionic dragon, Medusa, Bone Dragon, Horus, Seth, Chimera, Dark vs Light Dragon, Cthulhu/Mythos creatures, A7X Israel Throne, Arch Enemy Snake, Will to Power, Cattle Decapitation tour series, etc.
+- Artist Behance https://www.behance.net/markusmansonart names Markus Wiriahadinata; Jakarta; artist self-description notes horror, gore, dark-themed artwork; offers band merchandise illustration.
+- Specific A7X project https://www.behance.net/gallery/94918617/A7X-Israel-Throne explicitly says **"Done for @a7xisrael fans club of @avengedsevenfold"**. This supports a fan-club commission, NOT an official Avenged Sevenfold band contract. Do not conflate fan artwork or thematic projects with direct band clients.
+- User-provided screenshot: large ArtStation portfolio grid (66 works), showing intricate brightly highlighted monsters, organic and mechanical forms, shirt mockups, high-density linework, and some portraits / mixed subjects.
+- User-provided **claimed client/band list (unverified on a project-by-project basis)**: AVENGED SEVENFOLD; ARCH ENEMY; IN FLAMES; ACDC; KORN; PAPA ROACH; DISTURBED; CALIBAN; BRING ME THE HORIZON; DYING FETUS; BORN OF OSIRIS; EMMURE; WE CAME AS ROMANS; CARNIFEX; ALL SHALL PERISH; THE DEVIL WEARS PRADA; MISS MAY I; SUICIDE SILENCE; ASKING ALEXANDRIA. Save as leads only; do not repeat all as verified direct clients.
+
+### Observed stylistic DNA
+1. **Hyper-dense flowing linework**, intricately intertwined organic or sculptural filaments: roots, tendrils, muscle, bone, creature anatomy, armor relief, flames, smoke, scales and ornamental curls. Avoid reducing to ordinary jagged outlines or generic black-metal engraving.
+2. **Layered relief and dimensional carving**: powerful recognizable central silhouette, dense internal line clusters and intertwined depths; muscular or biomechanical-looking forms where the subject calls for them. This is not restricted to biomechanical creatures: animal, mythical, historical or technology subjects also appear.
+3. **Extreme value contrast with luminous chromatic accents**: deep near-black shadows and electrified cyan, acid green, violet, molten orange/red, blue etc. Internal highlights and light-from-within effects are frequent; NOT mandatory for all pieces. Avoid making every image generic neon glow.
+4. **Monumental creature/emblem / album-merch hierarchy**: intricate central hero form, controlled radial or dynamic directional flow, ornate supporting tendrils/flames/frames as appropriate. Dense but legible from distance. Not every design is symmetric or typographic.
+5. **Subject-adaptive dark fantasy/horror sensibility**, mythological, sci-fi, cosmic horror and band-merch visual energy; skulls, demons and gore are common examples but **not required objects**.
+6. **Richer-than-vector digital illustration**: many narrow tonal shifts, highlights, layered textures and detailed rendering. Do not force flat colors, vector tracing, strict spot inks, or prepress knockout because user handles final printing with Photoshop/DTF workflow.
+
+### Current preset: issues observed (metal-manson)
+Current prompt: "a brutal death-metal and dark-fantasy aesthetic inspired by intricate biomechanical and grotesque demonic illustration, highly detailed dark linework, skulls, and a menacing aggressive atmosphere."
+Current rule: "Keep linework extremely intricate and brutal, with skulls or dark-fantasy motifs prominent."
+- Too much focus on **skulls** and **demons**, ignoring broader portfolio incl. dragons, Medusa, mythic gods, wolves, cyborgs and other non-demonic concepts.
+- "dark linework" underspecifies intertwined structure, interior relief carving, and dramatic colorful luminance.
+- "brutal death-metal" anchors subgenre inaccurately as the only mode; portfolio also serves metalcore, fantasy, sci-fi and other genres.
+- Missing explicit permission for richly colored raster/digital painting and shape-driven composition; may output generic death metal poster or fake photo of apparel.
+- The preset has no graphicPrompt; review whether its default prompt handles the user-defined subject in graphic/logo modes after actual testing.
+
+### Candidate replacement style direction — not for production until approved
+"Create an original hyper-detailed dark-fantasy and extreme-music merchandise illustration of the user-selected subject. Construct the subject with elaborate intertwining sculptural linework, flowing organic filaments and layered relief-like forms; combine precise fine interior rendering, deeply carved shadows, and intricate overlapping anatomy, armor, textures or ornamental tendrils only when they suit the chosen subject. Establish a commanding central silhouette within a dense, dynamic composition. Use dramatic high-contrast illumination, near-black depth and strategically placed intense luminous color accents (electric cyan, violet, toxic green, molten orange or crimson) selected to fit the subject. Infuse mythological, horror, sci-fi or epic energy as appropriate without forcing skulls, demons, gore, or biomechanical elements. The result can be rich, dimensional raster illustration or digital painting; no forced vectorization, mockup, print separations or DTF knockout."
+
+Candidate rules:
+- "Prioritize intertwined hyper-detailed fine linework, relief-like dimensional layering, and readable dominant silhouette."
+- "Preserve the explicitly requested subject; mythology, monsters, demons and skulls are optional motifs and should not be inserted as defaults."
+- "Use bright chromatic internal lighting selectively against deep shadows when compatible with color controls; never restrict to black-only metal imagery."
+- "Allow illustration density, painterly color and gradient detail when Vector Ready is off; output standalone artwork, not a shirt mockup."
+
+### Validation plan
+- Baseline vs candidate, same neutral subject, e.g. **ceramic orchid, motorcycle, eagle, human portrait, mythological creature**; change only primary style.
+- Compare to Bootleg Metal: Manson should emphasize **continuous sculptural hyper-detailed creature/ornamental illustration**; Bootleg Metal may be **photographic montage, gothic lettering, gritty retro merch layout or illustration**.
+- Compare to Felix LaFlamme: Markus uses **dense sculptural relief and epic/dark gravitas**, Felix uses **thick cartoon contours, playful grotesque forms and intense flat/electric pop colors**.
+- For photo/reference input, test preserving identity while applying Manson's flowing, ornamental rendering language without automatically changing the person into a demon.
+- Test Flow and Midjourney prompts with DTG/DTF, Vector Ready=false, no text, and explicit typography; user reviews before changes.
