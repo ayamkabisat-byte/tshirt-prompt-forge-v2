@@ -95,19 +95,19 @@ test('screen print uses limited spot-color production language', () => {
   assert.match(output, /solid printable color separations/)
 })
 
-test('DTF defaults to rich full-color raster when Vector Ready is off', () => {
+test('DTF permits raster artwork without requiring gradients when Vector Ready is off', () => {
   const r = recipe({ printMethod: 'dtf', vectorReady: false, allowGradients: true, primaryStyle: 'surrealism-dali' })
   const output = buildFlowPrompt(r)
   assert.match(output, /full-color DTF raster artwork/)
-  assert.match(output, /rich gradients, texture, shading/)
+  assert.match(output, /none of these effects are mandatory/)
   assert.doesNotMatch(output, /no more than \d+ printable ink colors/)
   assert.ok(issueCodes(r).includes('RASTER_OK'))
 })
 
-test('DTG defaults to full-color raster and may keep smooth shading', () => {
+test('DTG allows full-color raster but respects the chosen style density', () => {
   const output = buildFlowPrompt(recipe({ printMethod: 'dtg', vectorReady: false, allowGradients: true, primaryStyle: 'storybook-ink' }))
   assert.match(output, /full-color DTG raster artwork/)
-  assert.match(output, /smooth shading, texture, glow, and gradients allowed/)
+  assert.match(output, /follow the chosen art style for color count, detail density, shading and tonal steps/)
 })
 
 test('DTF limited palette remains available as an artistic choice', () => {
@@ -178,4 +178,49 @@ test('dual-style compiler applies secondary style using the selected fusion mode
   const output = buildFlowPrompt(recipe({ primaryStyle: 'vintage-moto-lineart', secondaryStyle: 'japan-ukiyoe', fusionMode: 'primary-linework' }))
   assert.match(output, /Borrow mainly palette and selected decorative cues from the secondary style/)
   assert.match(output, /Ukiyo-e|woodblock/)
+})
+
+test('Bobber Cult V5 remains simple across Flow and Midjourney graphic modes', () => {
+  const r = recipe({
+    primaryStyle: 'moto-bobber-cult', subjectMode: 'graphic',
+    idea: 'a happy cartoon sea sponge transformed into a vintage crew-shirt graphic',
+    printMethod: 'dtf', vectorReady: false, colorCountMode: 'auto',
+    detailLevel: 'balanced',
+  })
+  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+    assert.match(output, /ONE memorable version|ONE striking visual idea/)
+    assert.match(output, /minimal tonal steps/)
+    assert.match(output, /do not add gradients|must not add gradients/i)
+    assert.doesNotMatch(output, /preserve useful gradients, texture, shading, glow/)
+    assert.doesNotMatch(output, /intricate engraved-style interior linework/)
+  }
+})
+
+test('DTG and DTF do not force raster gradients or complexity on minimal Bobber Cult', () => {
+  for (const printMethod of ['dtg', 'dtf']) {
+    const output = buildFlowPrompt(recipe({
+      primaryStyle: 'moto-bobber-cult', subjectMode: 'reference',
+      printMethod, vectorReady: false, detailLevel: 'balanced',
+    }))
+    assert.match(output, /none of these effects are mandatory/)
+    assert.match(output, /do not add gradients, glow or extra rendering/)
+    assert.match(output, /do not add ornamental details just to make it feel premium/)
+    assert.match(output, /Final print preparation is handled separately/)
+  }
+})
+
+test('Markus Manson can keep complex illustrated linework with DTG or DTF', () => {
+  for (const printMethod of ['dtg', 'dtf']) {
+    const r = recipe({
+      primaryStyle: 'metal-manson', subjectMode: 'graphic',
+      idea: 'mythic nine-tailed fox', printMethod, vectorReady: false,
+      detailLevel: 'intricate', colorCountMode: 'full',
+    })
+    for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+      assert.match(output, /controlled high-density directional linework/)
+      assert.match(output, /deep structural blacks/)
+      assert.match(output, /dense intricate detailing/)
+      assert.doesNotMatch(output, /no more than \\d+ printable ink colors/)
+    }
+  }
 })
