@@ -40,7 +40,7 @@ export function buildStyleDirection(recipe, detailed = false) {
 
   const detail = {
     clean: 'Keep detail density clean, selective, and highly readable.',
-    balanced: 'Balance readability with enough detail to feel premium.',
+    balanced: 'Balance readability while keeping the detail density and rendering complexity native to the primary style; do not add ornamental details just to make it feel premium.',
     intricate: 'Use dense intricate detailing while protecting the dominant silhouette and visual hierarchy.',
   }[recipe.detailLevel || 'balanced']
   const background = {
