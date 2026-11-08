@@ -252,3 +252,31 @@ User intends to provide full-resolution Markus Manson artworks rather than portf
 - Audit `productionRules` and `flow.js` so DTG/DTF define printing capabilities, not demand sophisticated gradients/glow; any correction must be generalized and regression-tested across all 65 styles (Markus and others should still retain detail when appropriate).
 - Make simplification measurable in prompt tests: 1 primary concept, up to 1–2 supporting motifs, very few tonal steps, no automatic contour around every shape; avoid hard color rules when user explicitly chooses full palette.
 - Test same three subjects with unchanged model, seed if available and controlled parameters; compare outputs old vs proposed; do not infer one design's fidelity from random image alone.
+
+## Felix LaFlamme visual test follow-up — 2026-11-08
+**STATUS: REFERENCE AUDIT AND CANDIDATE ONLY. Do not change `skate-laflamme` until user approves.**
+User provided ten comparison images. Their AI-generated SpongeBob grotesque image has quite good face/attitude, but overuses halftone, neon splashes and excessive secondary ocean props. Further supplied references show purple severed gamer hands (NOT GAME OVER YET), sunglasses zombie, electric-blue skull, toxic hazmat scene, green pizza mutant, pink candy-eating Majin Buu, DROP DEAD HERIOT skull poster, action-game fight, blue creature scene. Character references are heterogeneous and should not all be forced into one slime/skull/halftone formula.
+
+### Essential artistic language (reassessed from direct image comparison)
+1. **Character-driven shape design, first.** Strong acting/gesture, expressive and intentionally disproportionate anatomy: enlarged mouth, teeth, eyeballs, jaw, fists, hands, limbs, muscle or facial features as relevant. Distort proportions but keep core subject identity and recognizable silhouette (e.g. Buu's pink head antenna, silhouette, and comic personality remain; it becomes louder/more theatrical without losing who it is).
+2. **Bold variable-weight black cartoon ink with interior strokes subordinated to volume.** Black contours and solid shadow areas, directional hand-drawn mark-making on anatomy and fabric, often sharp cel-like shaded color groups. May range from fun and chunky to intricate action-comic illustration. Do not enforce uniform detailing.
+3. **Full vivid palette and strong separation**, with layered flat-to-semi-flat cel shadows and narrow highlights; contrast often intense and electric but **not every artwork needs neon, black backdrop, heavy texture or maximum saturation**. Respect user's palette.
+4. **Halftone is optional.** The references include works with almost no halftone dots and others with small localized dots. Do not default to all-over Ben-Day dots, comic-newsprint texture, stipple or halftone on all skin/surfaces.
+5. **Gross-out is one expressive technique, not the universal subject.** Slime, dripping flesh, mutagenic anatomy, skulls, splashes, skateboards and ironic horror motifs only when conceptually relevant; humor and pop-culture exaggeration can carry the style on their own.
+6. **Purposeful composition**: one main expressive action and strong form hierarchy; vivid bursts, drips, starbursts, props or lettering only when needed, not a generic busy sticker frame surrounding every subject.
+7. **Buu sample** is particularly diagnostic: pink cartoon character with unmistakable head antenna, face and bold forms, dramatic oversized mouth and dramatic arm/hand gesture, candy/Halloween details; strong flat/shaped shading rather than blanket halftone. The transformation is character-performance first, effect-texture second.
+8. Other samples show that Félix can render more anatomically complex comic action scenes, not just a low-detail mutant mascot; avoid oversimplifying entire preset into flat mascot vector.
+
+### Current preset overweights
+- "small stippled texture marks" and "tightly controlled interior hatching" can push ubiquitous visible dots and shading.
+- "neon gross-out comic" label, "humorously exaggerated eyes, teeth, tongues, slime, drips, splashes", "splatters" rules overemphasize slime/monster/horror and neon to the detriment of recognizable pop character reinterpretation.
+- Artist identity should be encoded primarily as **exaggerated expressive cartoon construction + bold directional linework + controlled cel-shading**, not mandatory halftone or slime.
+
+### Candidate refinement for next user-approved iteration
+"Original high-energy punk/underground comic character illustration of the requested subject, with a highly expressive acting pose, bold variable-weight hand-inked black contours, deliberately exaggerated facial and body proportions, confident solid shadow pockets and limited deliberate directional interior strokes, plus sharp layered cel-like color shading. Maintain clear character identity while creatively transforming its anatomy, expression, posture and attitude. Use striking saturated contrasting colors appropriate to the supplied palette. Add optional funny-grotesque effects, slime, splashes or skate/comic ephemera only when they make sense for the concept. Halftone and stippling are optional, localized treatments rather than defaults; avoid blanket dotted shading or automatic busy decorative backgrounds. Preserve dense action-comic complexity when the scene calls for it; do not reduce everything to generic flat mascots or force vector files."
+
+### Next tests
+- Same source character in three contexts: Buu eating candy, SpongeBob with ONE prop, recognizable animal/ordinary sneaker transformed into energetic cartoon.
+- Compare amount of halftone, preservation of identifying silhouette, pose/anatomy exaggeration, purposeful accessory count, bold shadow ink rhythm, and depth of cel shading.
+- Test Flow and Midjourney with DTG/DTF, Vector Ready off, Style Fusion disabled, balanced detail; one trial with manual palette to isolate rendering from color.
+- Do not update preset/engine until explicitly requested. Existing Félix V1 remains active.
