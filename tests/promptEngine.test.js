@@ -203,7 +203,7 @@ test('DTG and DTF do not force raster gradients or complexity on minimal Bobber 
       printMethod, vectorReady: false, detailLevel: 'balanced',
     }))
     assert.match(output, /none of these effects are mandatory/)
-    assert.match(output, /do not add gradients, glow or extra rendering/)
+    assert.match(output, /(?:do not|must not) add gradients, glow or extra rendering/)
     assert.match(output, /do not add ornamental details just to make it feel premium/)
     assert.match(output, /Final print preparation is handled separately/)
   }
