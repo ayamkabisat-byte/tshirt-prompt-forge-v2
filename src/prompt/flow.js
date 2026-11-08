@@ -42,7 +42,7 @@ export function buildFlowPrompt(recipe) {
     recipe.vectorReady
       ? '- Vector Ready is intentionally enabled: keep shapes and separations trace-friendly where compatible with the chosen print method'
       : ['dtg', 'dtf'].includes(recipe.printMethod)
-        ? '- raster artwork is allowed; preserve useful gradients, texture, shading, glow, and complex color treatment instead of flattening everything into vector shapes'
+        ? '- DTG/DTF can reproduce raster photography, collage, flat-color graphics or richly detailed illustration; retain only the effects called for by the chosen art style. Do not introduce gradients, glow, extra tones or detail just because the print method supports them. Final print preparation is handled separately'
         : '- preserve the selected rendering texture while keeping the design printable',
     '',
     `FLOW SETTING NOTE: Select ${flowModelLabel} in Flow and set the canvas aspect ratio to ${recipe.aspectRatio}.`,
