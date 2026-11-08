@@ -195,3 +195,40 @@ Candidate rules:
 - Compare to Felix LaFlamme: Markus uses **dense sculptural relief and epic/dark gravitas**, Felix uses **thick cartoon contours, playful grotesque forms and intense flat/electric pop colors**.
 - For photo/reference input, test preserving identity while applying Manson's flowing, ornamental rendering language without automatically changing the person into a demon.
 - Test Flow and Midjourney prompts with DTG/DTF, Vector Ready=false, no text, and explicit typography; user reviews before changes.
+
+
+## Bobber Cult: visual test feedback — 2026-11-08
+Status: **TEST FAILED STYLE FIDELITY**; user has explicitly asked to reassess artwork and will provide sharper Markus Manson references later. Do not alter Markus until reviewing those samples. **No preset changes made by this note.**
+
+### Test images provided by user
+1. Cartoon yellow sponge driving a complex hot-rod with snail / burger / engine details.
+2. Helmeted screaming chimpanzee riding classic motorcycle, many mechanical, leather, spoke and shading details.
+3. Snarling koala with forest/branches and detailed animal fur, almost traditional tattoo or engraved badge appearance.
+
+### User critique
+Bobber Cult's authentic portfolio is **simpler and more graphic** than these generated images. The current preset is too detailed, especially complex line work, layered 3D-ish shading and crowded props. Do not conflate "high-impact commercial retro merch" with "more intricate linework everywhere."
+
+### Root-cause hypotheses in current preset
+- Current prompt explicitly includes "intricate engraved-style interior linework", "selective cross-hatching and stippling", "dramatic carved shadow masses"; the graphicPrompt says "dense interior ink hatching, relief-like engraved shadows"; rules reinforce "intricate interior engraving and hatching". These strongly bias all subjects towards elaborate woodcut/engraving.
+- Very complex decorative props (mechanical parts, tire tread, ornaments, background) overwhelm primary hero.
+- Exaggerated creature anatomy gets rendered as realistic, aggressive tattoo-mascot shading or polished busy sticker, not simplified bold underground event merch.
+- No visible custom lettering in tests; this is fine when text inputs are empty (do NOT hallucinate lettering), but layout should leave a place for optional text and the preset should emphasize lettering *when text is provided*.
+- Palette often too desaturated (cream/olive/sepia). Observed artist portfolio frequently favors flat saturated red/orange/yellow/blue with solid black or cream separation. Color choice should still honor the user's palette.
+
+### Candidate adjusted Bobber visual grammar (requires new test and explicit approval before src editing)
+- Prioritize strong, **simple and instantly readable screenprint-like shapes**, bold black outer contours, stylized mid-weight inner lines and limited detail at important focal features, not dense hatch over every surface.
+- Mostly **flat 2–5 punchy colors** with strong black/cream contrast; light distress only where stylistically helpful. This is an *aesthetic preference*, not a technical spot-color restriction: DTG/DTF raster allowed.
+- Suggest graphic narrative, charismatic / cheeky figures, classic biker/chopper/hot-rod culture as **optional themes**; the user-selected subject remains central.
+- Maintain vintage-event-poster or custom-shop typography/layout grammar when requested; **no compulsory text**, no made-up words, no huge invented decorative ornaments.
+- Avoid realism, highly dimensional gradients, intricate woodcut engraving, multi-object collage overload, dense microhatching, mechanical blueprint look and polished layered tattoo-badge default.
+- Emphasize **simplified contour-driven retro editorial/cartoon illustrations**, visible negative space, controlled supporting accents, selected texture and confident compositional hierarchy.
+- Do not erase all details or make it generic logo-vector minimalism; restore selective expressive hand-drawn character and good graphic rhythm.
+
+### Concise test candidate (not yet implemented)
+"Create an original vintage custom-culture merchandise illustration of the requested subject, combining the attitude of underground motorcycle and hot-rod event graphics with bold, simplified hand-drawn character art. Use large confident black ink contours, expressive stylized forms, selective inner line details and solid shadow shapes. Keep the silhouette striking, the composition uncluttered, with enough negative space and a punchy retro palette of a few strong colors. Use minor print distress and a little hatching only where they clarify form; avoid dense engraving, realism, excessive machinery or ornate tattoo-like rendering. Integrate distinctive custom poster lettering only when specific text is provided, and never force bikes, skulls, flames or pinstriping. Standalone illustrated artwork, not a garment mockup; raster and DTG/DTF are welcome."
+
+### Proposed test method
+Use identical three subjects and identical parameters from the failed images. Compare old vs candidate while controlling seed/model if possible; assess density, number of decorative motifs, readability at small size, degree of simplification, presence/absence of compulsory bikes/skulls, and resemblance to **actual Bobber Cult reference works** rather than to generic biker illustrations.
+
+### Artist review next
+User intends to provide full-resolution Markus Manson artworks rather than portfolio screenshots. Wait for those references before modifying that artist's preset further.
