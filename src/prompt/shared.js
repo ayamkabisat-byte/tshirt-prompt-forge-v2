@@ -140,13 +140,12 @@ export function productionRules(recipe, verbose = false) {
       rules.push('use solid printable color separations with no continuous gradients')
     }
   } else if (method.id === 'dtg') {
-    rules.push('full-color DTG raster artwork with rich tonal range, fine detail, smooth shading, texture, glow, and gradients allowed when they serve the selected style')
-    rules.push('do not flatten the artwork into spot-color vector language unless Vector Ready is intentionally enabled')
+    rules.push('full-color DTG raster artwork is supported, including photos, collage, flat-color graphics, intricate illustration, texture and smooth shading when appropriate to the selected style; none of these effects are mandatory')
+    rules.push('follow the chosen art style for color count, detail density, shading and tonal steps; DTG capability alone must not add gradients, glow or extra rendering')
     if (colorPolicy === 'limited') rules.push(`stylistically restrict the artwork to approximately ${maxColors} dominant colors even though DTG can print full color`)
   } else if (method.id === 'dtf') {
-    rules.push('full-color DTF raster artwork with crisp high-definition edges, strong opacity, rich gradients, texture, shading, and complex color transitions allowed when appropriate')
-    rules.push('keep the outer silhouette clean and avoid weak semi-transparent fringe pixels around the perimeter')
-    rules.push('do not force vector-style simplification unless Vector Ready is intentionally enabled')
+    rules.push('full-color DTF raster artwork is supported, including photos, collage, flat-color graphics, intricate illustration and gradients when appropriate to the selected style; none of these effects are mandatory')
+    rules.push('follow the chosen art style for color count, detail density, shading and tonal steps; DTF capability alone must not add gradients, glow or extra rendering; do not perform prepress knockout or color separation')
     if (colorPolicy === 'limited') rules.push(`stylistically restrict the artwork to approximately ${maxColors} dominant colors even though DTF can print full color`)
   } else if (method.id === 'embroidery-look') {
     rules.push('flat high-resolution raster artwork that visually imitates dimensional embroidery, thread direction, stitch density, and thread sheen without showing a garment mockup')
