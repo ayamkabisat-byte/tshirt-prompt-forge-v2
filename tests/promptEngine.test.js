@@ -224,3 +224,47 @@ test('Markus Manson can keep complex illustrated linework with DTG or DTF', () =
     }
   }
 })
+
+test('Bobber Cult V5.1 defaults to drawn figures rather than photographic hands', () => {
+  for (const subjectMode of ['reference', 'graphic']) {
+    const r = recipe({
+      primaryStyle: 'moto-bobber-cult', subjectMode,
+      idea: 'praying hands with a small rosary',
+      printMethod: 'dtf', vectorReady: false, detailLevel: 'balanced',
+    })
+    for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+      assert.match(output, /hand-drawn two-dimensional graphic illustration|hand-drawn vintage custom-culture merch illustration/)
+      assert.match(output, /photo collage|photographic cutouts/)
+      assert.match(output, /ONLY when the user explicitly asks|ONLY on explicit user request/)
+      assert.match(output, /photo-like skin rendering|photorealistic hands|photographic skin texture/)
+    }
+  }
+})
+
+test('Bobber Cult V5.1 limits character clutter while keeping recognizable subjects', () => {
+  const r = recipe({
+    primaryStyle: 'moto-bobber-cult', subjectMode: 'reference',
+    idea: 'an animated yellow sea sponge as a garage club mascot',
+    printMethod: 'dtg', vectorReady: false, detailLevel: 'balanced',
+  })
+  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+    assert.match(output, /recognizable identity/)
+    assert.match(output, /ONE dominant action/)
+    assert.match(output, /few accessories|needless accessories/)
+    assert.match(output, /do not automatically put characters on elaborate bikes/)
+  }
+})
+
+test('Bobber Cult V5.1 preserves striking V-twin machinery and custom text hierarchy', () => {
+  const r = recipe({
+    primaryStyle: 'moto-bobber-cult', subjectMode: 'graphic',
+    idea: 'V-twin motorcycle engine', textTop: 'V-TWIN', textBottom: 'MACHINE',
+    printMethod: 'screenprint', vectorReady: true,
+  })
+  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+    assert.match(output, /essential structural shapes|bold mechanical construction/)
+    assert.match(output, /lettering when|striking typography/)
+    assert.match(output, /V-TWIN/)
+    assert.match(output, /MACHINE/)
+  }
+})
