@@ -127,10 +127,3 @@ export const FLOW_MODELS = [
   { id: 'nano-banana-pro', label: 'Nano Banana Pro', note: 'Complex design / precision' },
   { id: 'nano-banana-2-lite', label: 'Nano Banana 2 Lite', note: 'Fast / economical' },
 ]
-
-export const MIDJOURNEY_MODELS = [
-  { id: '8.2', label: 'V8.2', note: 'Current default' },
-  { id: '8.1', label: 'V8.1', note: 'Fast, strong prompt adherence' },
-  { id: '7', label: 'V7', note: 'Use when Omni Reference is required' },
-  { id: 'niji-7', label: 'Niji 7', note: 'Anime / Eastern illustration' },
-]
