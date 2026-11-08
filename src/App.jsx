@@ -5,9 +5,9 @@ import {
   COMPOSITIONS, EDGE_MODES, PRINT_METHODS, COLOR_COUNT_MODES,
   COLOR_MODES, TYPOGRAPHY_PRESETS, DETAIL_LEVELS, BACKGROUND_MODES,
   LOGO_INTEGRATIONS, MIX_ELEMENTS, ASPECT_RATIOS, GARMENT_COLORS,
-  FLOW_MODELS, MIDJOURNEY_MODELS,
+  FLOW_MODELS,
 } from './data/presets.js'
-import { analyzeRecipe, buildFlowPrompt, buildMidjourneyPrompt, optimizeRecipe } from './prompt/index.js'
+import { analyzeRecipe, buildFlowPrompt, optimizeRecipe } from './prompt/index.js'
 
 const DEFAULT_RECIPE = {
   subjectMode: 'reference',
@@ -59,25 +59,11 @@ const DEFAULT_RECIPE = {
   extraPrompt: '',
   negativePrompt: '',
 
-  mjModel: '8.2',
-  raw: true,
-  stylize: 100,
-  chaos: 0,
-  imageWeight: 1.5,
-  referenceUrl: '',
-  styleReference: '',
-  styleWeight: 100,
-  useOmniReference: false,
-  omniReference: '',
-  omniWeight: 100,
-  seed: '',
-
   flowModel: 'nano-banana-2',
 }
 
 export default function App() {
   const [recipe, setRecipe] = useState(DEFAULT_RECIPE)
-  const [activeOutput, setActiveOutput] = useState('flow')
   const [copied, setCopied] = useState('')
   const [primaryQuery, setPrimaryQuery] = useState('')
   const [secondaryQuery, setSecondaryQuery] = useState('')
@@ -86,7 +72,6 @@ export default function App() {
   const [activeStep, setActiveStep] = useState('subject')
   const [showAllPanels, setShowAllPanels] = useState(false)
   const [recipeNotice, setRecipeNotice] = useState('')
-  const [advancedModelControls, setAdvancedModelControls] = useState(false)
 
   const set = (key, value) => setRecipe((current) => ({ ...current, [key]: value }))
   const toggleMix = (id) => setRecipe((current) => ({
@@ -95,7 +80,6 @@ export default function App() {
   }))
 
   const issues = useMemo(() => analyzeRecipe(recipe), [recipe])
-  const midjourneyPrompt = useMemo(() => buildMidjourneyPrompt(recipe), [recipe])
   const flowModel = FLOW_MODELS.find((item) => item.id === recipe.flowModel) ?? FLOW_MODELS[0]
   const flowPrompt = useMemo(
     () => buildFlowPrompt({ ...recipe, flowModelLabel: flowModel.label }),
@@ -168,7 +152,7 @@ export default function App() {
           <p className="eyebrow">Production-aware prompt compiler</p>
           <h1>T-Shirt Prompt Forge <span>v2</span></h1>
           <p className="subhead">
-            {V1_STYLE_COUNT} migrated v1 styles · Screen Print, DTF, DTG · dedicated Midjourney and Flow / Nano Banana compilers.
+            {V1_STYLE_COUNT} migrated v1 styles · Screen Print, DTF, DTG · Flow / Nano Banana prompt generator.
           </p>
         </div>
         <div className="topbar-actions">
@@ -217,30 +201,15 @@ export default function App() {
               />
             </Field>
 
-            {recipe.subjectMode === 'reference' && (
-              <div className="two-col">
-                <Field label="Reference fidelity">
-                  <select value={recipe.referenceFidelity} onChange={(e) => set('referenceFidelity', e.target.value)}>
-                    {REFERENCE_FIDELITY.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
-                  </select>
-                </Field>
-                <Field label="Midjourney image URL">
-                  <input value={recipe.referenceUrl} onChange={(e) => set('referenceUrl', e.target.value)} placeholder="https://..." />
-                </Field>
-              </div>
+            {['reference', 'logo'].includes(recipe.subjectMode) && (
+              <Field label="Reference fidelity">
+                <select value={recipe.referenceFidelity} onChange={(e) => set('referenceFidelity', e.target.value)}>
+                  {REFERENCE_FIDELITY.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+                </select>
+              </Field>
             )}
-
-            {recipe.subjectMode === 'logo' && (
-              <div className="two-col">
-                <Field label="Reference fidelity">
-                  <select value={recipe.referenceFidelity} onChange={(e) => set('referenceFidelity', e.target.value)}>
-                    {REFERENCE_FIDELITY.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
-                  </select>
-                </Field>
-                <Field label="Primary logo reference URL">
-                  <input value={recipe.referenceUrl} onChange={(e) => set('referenceUrl', e.target.value)} placeholder="https://..." />
-                </Field>
-              </div>
+            {['reference', 'logo'].includes(recipe.subjectMode) && (
+              <p className="helper">Attach your source image directly in Flow as a reference/ingredient. No image URL is needed in this editor.</p>
             )}
 
             {recipe.subjectMode === 'tattoo' && (
@@ -448,44 +417,7 @@ export default function App() {
             </Field>
           </Panel>
 
-          <Panel visible={showAllPanels || activeStep === 'output'} number="7" title="Midjourney Controls" description="Only Midjourney-specific syntax is generated here; parameters are appended at the end of the prompt.">
-            <div className="three-col">
-              <Field label="Model">
-                <select value={recipe.mjModel} onChange={(e) => set('mjModel', e.target.value)}>
-                  {MIDJOURNEY_MODELS.map((item) => <option key={item.id} value={item.id}>{item.label} — {item.note}</option>)}
-                </select>
-              </Field>
-              <Field label={`Stylize: ${recipe.stylize}`}><input type="range" min="0" max="1000" step="25" value={recipe.stylize} onChange={(e) => set('stylize', Number(e.target.value))} /></Field>
-              <Field label={`Chaos: ${recipe.chaos}`}><input type="range" min="0" max="100" step="5" value={recipe.chaos} onChange={(e) => set('chaos', Number(e.target.value))} /></Field>
-            </div>
-
-            <div className="two-col">
-              <Field label={`Image weight: ${recipe.imageWeight}`}><input type="range" min="0" max="3" step="0.25" value={recipe.imageWeight} onChange={(e) => set('imageWeight', Number(e.target.value))} /></Field>
-              <Toggle label="Raw Mode" checked={recipe.raw} onChange={(value) => set('raw', value)} />
-            </div>
-
-            <button type="button" className="advanced-style-toggle" aria-expanded={advancedModelControls} onClick={() => setAdvancedModelControls((value) => !value)}>{advancedModelControls ? '− Hide' : '+ Show'} advanced references & seed</button>
-            {advancedModelControls && <div className="advanced-style-content">
-            <Field label="Style Reference URL / code">
-              <input value={recipe.styleReference} onChange={(e) => set('styleReference', e.target.value)} placeholder="Optional --sref value" />
-            </Field>
-            <Field label={`Style weight: ${recipe.styleWeight}`}>
-              <input type="range" min="0" max="1000" step="25" value={recipe.styleWeight} onChange={(e) => set('styleWeight', Number(e.target.value))} />
-            </Field>
-
-            <Toggle label="Use Omni Reference (V7 only)" checked={recipe.useOmniReference} onChange={(value) => set('useOmniReference', value)} />
-            {recipe.useOmniReference && (
-              <div className="two-col">
-                <Field label="Omni Reference URL"><input value={recipe.omniReference} onChange={(e) => set('omniReference', e.target.value)} placeholder="https://..." /></Field>
-                <Field label={`Omni weight: ${recipe.omniWeight}`}><input type="range" min="1" max="1000" step="25" value={recipe.omniWeight} onChange={(e) => set('omniWeight', Number(e.target.value))} /></Field>
-              </div>
-            )}
-
-            <Field label="Seed (optional)"><input value={recipe.seed} onChange={(e) => set('seed', e.target.value.replace(/\D/g, ''))} placeholder="Numeric seed" /></Field>
-            </div>}
-          </Panel>
-
-          <Panel visible={showAllPanels || activeStep === 'output'} number="8" title="Flow / Nano Banana" description="Flow receives structured natural-language instructions rather than Midjourney parameter syntax.">
+          <Panel visible={showAllPanels || activeStep === 'output'} number="7" title="Flow / Nano Banana" description="Generate structured natural-language prompts for Flow and Nano Banana models.">
             <Field label="Flow image model">
               <select value={recipe.flowModel} onChange={(e) => set('flowModel', e.target.value)}>
                 {FLOW_MODELS.map((item) => <option key={item.id} value={item.id}>{item.label} — {item.note}</option>)}
@@ -513,25 +445,18 @@ export default function App() {
 
           <RecipeSummary recipe={recipe} primaryStyle={primaryStyle} secondaryStyle={secondaryStyle} printMethod={printMethod} effectiveColorPolicy={effectiveColorPolicy} />
 
-          <div className="output-tabs">
-            <button className={activeOutput === 'flow' ? 'active' : ''} onClick={() => setActiveOutput('flow')}>Flow / Nano Banana</button>
-            <button className={activeOutput === 'midjourney' ? 'active' : ''} onClick={() => setActiveOutput('midjourney')}>Midjourney</button>
-          </div>
-
           <PromptCard
-            title={activeOutput === 'flow' ? `Flow · ${flowModel.label}` : `Midjourney · ${recipe.mjModel === 'niji-7' ? 'Niji 7' : `V${recipe.mjModel}`}`}
-            prompt={activeOutput === 'flow' ? flowPrompt : midjourneyPrompt}
-            copied={copied === activeOutput}
-            onCopy={() => copy(activeOutput, activeOutput === 'flow' ? flowPrompt : midjourneyPrompt)}
+            title={`Flow · ${flowModel.label}`}
+            prompt={flowPrompt}
+            copied={copied === 'flow'}
+            onCopy={() => copy('flow', flowPrompt)}
           />
 
           <div className="comparison-card">
-            <p className="eyebrow">Both outputs are live</p>
-            <div><strong>Flow</strong><span>{flowPrompt.length.toLocaleString()} chars · structured instructions and preservation rules.</span></div>
-            <div><strong>Midjourney</strong><span>{midjourneyPrompt.length.toLocaleString()} chars · compact visual prompt plus MJ parameters.</span></div>
+            <p className="eyebrow">Flow prompt is live</p>
+            <div><strong>{flowModel.label}</strong><span>{flowPrompt.length.toLocaleString()} chars · structured art direction, subject preservation and style controls.</span></div>
             <div className="quick-copy-row">
-              <button className="mini-button" onClick={() => copy('flow-quick', flowPrompt)}>{copied === 'flow-quick' ? 'Flow Copied ✓' : 'Copy Flow'}</button>
-              <button className="mini-button" onClick={() => copy('mj-quick', midjourneyPrompt)}>{copied === 'mj-quick' ? 'MJ Copied ✓' : 'Copy Midjourney'}</button>
+              <button className="mini-button" onClick={() => copy('flow-quick', flowPrompt)}>{copied === 'flow-quick' ? 'Prompt Copied ✓' : 'Copy Prompt'}</button>
             </div>
           </div>
         </aside>
