@@ -1,15 +1,12 @@
 # T-Shirt Prompt Forge v2
 
-A clean rebuild of **T-Shirt Prompt Forge** focused on two image-generation workflows:
-
-- **Midjourney** — compact visual prompts plus supported Midjourney parameters.
-- **Google Flow / Nano Banana 2** — structured natural-language art direction for generation and reference-based editing.
+A clean rebuild of **T-Shirt Prompt Forge** focused on **Google Flow / Nano Banana** — structured natural-language prompts for generating artwork and transforming image references.
 
 The original `tshirtprompt` repository is intentionally left untouched.
 
 ## Why v2 exists
 
-v2 replaces the old single-string prompt builder with a shared **Design Recipe** and two separate prompt compilers. The same design intent is translated differently for each image model instead of reusing one generic prompt.
+v2 replaces the old single-string prompt builder with a configurable **Design Recipe** and a dedicated Flow prompt compiler. Artwork style, subject identity, composition, typography and production choices are combined into one structured prompt.
 
 ## Current feature set
 
@@ -27,11 +24,9 @@ v2 replaces the old single-string prompt builder with a shared **Design Recipe**
 - Exact typography fields plus typography presets
 - Logo integration controls
 - Extra direction and negative direction fields
-- Midjourney V8.2 / V8.1 / V7 / Niji 7 profiles
-- Raw, Stylize, Chaos, Image Weight, Style Reference, Omni Reference, Seed
 - Flow model selector for Nano Banana 2, Nano Banana Pro, and Nano Banana 2 Lite
 - Prompt Health conflict detection + Auto Optimize
-- Separate live Flow and Midjourney prompt output
+- Single live Flow / Nano Banana prompt with one-click copy
 - Automated prompt-engine QA through GitHub Actions
 
 ## Phase D Visual Benchmark Lab
@@ -61,7 +56,7 @@ The lab contains 12 fixed benchmark recipes covering:
 - bootleg hip-hop DTG
 - limited-color Risograph-style DTF
 
-Each Flow and Midjourney result can be scored on eight visual criteria. Scores are stored locally in the browser so the two engines can be compared consistently.
+Each Flow result can be scored on eight visual criteria. Scores are stored locally in the browser for repeatable style quality checks.
 
 See `docs/PHASE_D_VISUAL_BENCHMARK.md` for the test procedure and scoring rubric.
 
@@ -110,7 +105,6 @@ src/
   prompt/
     compatibility.js
     flow.js
-    midjourney.js
     shared.js
     styleCompiler.js
     index.js
@@ -130,9 +124,7 @@ docs/
 
 ## Prompt philosophy
 
-**Midjourney compiler** keeps the prompt concise and visual, then appends Midjourney parameters at the end.
-
-**Flow compiler** produces explicit sections for subject preservation, art direction, composition, typography, production constraints, and output rules. Flow-specific settings such as aspect ratio remain UI settings rather than being imitated with Midjourney syntax.
+**Flow compiler** produces explicit sections for subject preservation, art direction, composition, typography, production constraints, and output rules. Aspect ratio and image ingredients are set in Flow rather than encoded as model-specific command flags.
 
 **Production method matters.** Screen Print defaults to limited spot-color logic, while DTF and DTG may preserve full-color raster rendering, gradients, texture, glow, and complex shading. Vector Ready remains optional for DTF/DTG.
 
@@ -140,4 +132,4 @@ docs/
 
 Phase C established automated regression coverage for the prompt engine, the 65 migrated styles, print-method compatibility, typography, style fusion, reference rules, and production constraints. CI runs tests, lint, and the Vite production build.
 
-Phase D adds visual benchmarking because compiler correctness alone cannot prove that an image model will produce strong printable artwork. The benchmark lab is the controlled bridge between automated QA and real Flow/Midjourney generations.
+Phase D adds visual benchmarking because compiler correctness alone cannot prove that an image model will produce strong printable artwork. The benchmark lab is the controlled bridge between automated QA and real Flow generations.
