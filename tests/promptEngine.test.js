@@ -34,7 +34,7 @@ function recipe(overrides = {}) {
     aspectRatio: '3:4',
     textTop: '', textSub: '', textBottom: '',
     typographyPreset: 'auto', typographyStyle: '',
-    logoIntegration: 'none', logoText: '', logoReference: '',
+    logoIntegration: 'none', logoText: '',
     extraPrompt: '', negativePrompt: '',
     flowModel: 'nano-banana-2',
     ...overrides,
@@ -140,11 +140,12 @@ test('manual palette validation catches empty and over-limit palettes', () => {
   assert.ok(issueCodes(over).includes('PALETTE_LIMIT'))
 })
 
-test('biker patches and logo-image integration expose missing-input warnings', () => {
-  const r = recipe({ mixElements: { ...recipe().mixElements, bikerPatches: true }, logoIntegration: 'image', logoReference: '' })
+test('biker patches still warn without text and Flow logo images need no URL', () => {
+  const r = recipe({ mixElements: { ...recipe().mixElements, bikerPatches: true }, logoIntegration: 'image' })
   const codes = issueCodes(r)
   assert.ok(codes.includes('BIKER_PATCH_TEXT'))
-  assert.ok(codes.includes('LOGO_REFERENCE_EMPTY'))
+  assert.ok(!codes.includes('LOGO_REFERENCE_EMPTY'))
+  assert.match(buildFlowPrompt(r), /Integrate the supplied secondary logo image/)
 })
 
 test('Vector-style artwork remains valid for DTF', () => {
