@@ -25,7 +25,6 @@ export function analyzeRecipe(recipe) {
   if (recipe.mixElements?.bikerPatches && !String(recipe.textTop || '').trim() && !String(recipe.textBottom || '').trim()) issues.push({ level: 'info', code: 'BIKER_PATCH_TEXT', message: 'Biker Rocker Patches is enabled, but no top or bottom text is provided yet.' })
   if (recipe.referenceFidelity === 'strict' && styleIds.some((id) => ABSTRACT_STYLES.has(id))) issues.push({ level: 'warning', code: 'STRICT_ABSTRACT', message: 'Strict reference fidelity can fight with very abstract styles. Balanced fidelity may produce a cleaner result.' })
   if (recipe.vectorReady && styles.some((style) => Number(style?.vectorScore || 3) <= 2)) issues.push({ level: 'warning', code: 'STYLE_VECTOR', message: 'One selected style is texture-heavy. Vector Ready will simplify part of its original character.' })
-  if (recipe.logoIntegration === 'image' && !String(recipe.logoReference || '').trim()) issues.push({ level: 'warning', code: 'LOGO_REFERENCE_EMPTY', message: 'Logo Image Reference is enabled but no secondary logo reference was provided; attach it in Flow as a reference/ingredient.' })
 
   return issues
 }
