@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { BENCHMARKS, VISUAL_SCORE_CRITERIA } from './data/benchmarks.js'
-import { analyzeRecipe, buildFlowPrompt, buildMidjourneyPrompt } from './prompt/index.js'
+import { analyzeRecipe, buildFlowPrompt } from './prompt/index.js'
 import './benchmark.css'
 
 const STORAGE_KEY = 'tpf-v2-visual-benchmark-scores'
@@ -15,7 +15,6 @@ function readStoredScores() {
 
 export default function BenchmarkLab() {
   const [benchmarkId, setBenchmarkId] = useState(BENCHMARKS[0].id)
-  const [engine, setEngine] = useState('flow')
   const [scores, setScores] = useState(readStoredScores)
   const [copied, setCopied] = useState('')
   const [notes, setNotes] = useState('')
@@ -26,9 +25,8 @@ export default function BenchmarkLab() {
     () => buildFlowPrompt({ ...benchmark.recipe, flowModelLabel: 'Nano Banana 2' }),
     [benchmark],
   )
-  const mjPrompt = useMemo(() => buildMidjourneyPrompt(benchmark.recipe), [benchmark])
-  const prompt = engine === 'flow' ? flowPrompt : mjPrompt
-  const activeScores = scores[benchmark.id]?.[engine] || {}
+  const prompt = flowPrompt
+  const activeScores = scores[benchmark.id]?.flow || {}
   const numericScores = VISUAL_SCORE_CRITERIA.map((criterion) => Number(activeScores[criterion.id] || 0)).filter(Boolean)
   const total = numericScores.reduce((sum, value) => sum + value, 0)
   const completed = numericScores.length
@@ -48,8 +46,8 @@ export default function BenchmarkLab() {
       ...scores,
       [benchmark.id]: {
         ...(scores[benchmark.id] || {}),
-        [engine]: {
-          ...(scores[benchmark.id]?.[engine] || {}),
+        flow: {
+          ...(scores[benchmark.id]?.flow || {}),
           [criterionId]: Number(value),
         },
       },
@@ -59,7 +57,7 @@ export default function BenchmarkLab() {
 
   const resetCurrentScores = () => {
     const benchmarkScores = { ...(scores[benchmark.id] || {}) }
-    delete benchmarkScores[engine]
+    delete benchmarkScores.flow
     const next = { ...scores, [benchmark.id]: benchmarkScores }
     storeScores(next)
   }
@@ -79,7 +77,7 @@ export default function BenchmarkLab() {
     const summary = [
       `T-Shirt Prompt Forge v2 — Phase D Visual Benchmark`,
       `Benchmark: ${benchmark.title}`,
-      `Engine: ${engine === 'flow' ? 'Flow / Nano Banana 2' : 'Midjourney'}`,
+      `Engine: Flow / Nano Banana 2`,
       `Score: ${total} / ${maxTotal} (${completed}/${VISUAL_SCORE_CRITERIA.length} criteria completed)`,
       '',
       ...scoreLines,
@@ -96,7 +94,7 @@ export default function BenchmarkLab() {
         <div>
           <p className="benchmark-eyebrow">Phase D · Real-world visual QA</p>
           <h1>Visual Benchmark Lab</h1>
-          <p>Run the same recipe in Flow and Midjourney, then score the visual result with one consistent production rubric.</p>
+          <p>Generate each benchmark in Flow and score the visual result with one consistent production rubric.</p>
         </div>
         <a className="benchmark-back" href={window.location.pathname}>Back to Prompt Forge</a>
       </header>
@@ -108,10 +106,7 @@ export default function BenchmarkLab() {
             {BENCHMARKS.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
           </select>
         </label>
-        <div className="benchmark-engine-tabs">
-          <button className={engine === 'flow' ? 'active' : ''} onClick={() => setEngine('flow')}>Flow / Nano Banana 2</button>
-          <button className={engine === 'midjourney' ? 'active' : ''} onClick={() => setEngine('midjourney')}>Midjourney</button>
-        </div>
+        <div className="benchmark-engine-tabs"><span>Flow / Nano Banana 2</span></div>
       </section>
 
       <section className="benchmark-overview">
@@ -139,7 +134,7 @@ export default function BenchmarkLab() {
             <div className="benchmark-card-head">
               <div>
                 <p className="benchmark-eyebrow">Generated prompt</p>
-                <h3>{engine === 'flow' ? 'Flow / Nano Banana 2' : 'Midjourney V8.2'}</h3>
+                <h3>Flow / Nano Banana 2</h3>
               </div>
               <button onClick={() => copyText('prompt', prompt)}>{copied === 'prompt' ? 'Copied ✓' : 'Copy Prompt'}</button>
             </div>
@@ -203,7 +198,7 @@ export default function BenchmarkLab() {
 
           <label className="benchmark-notes">
             <span>Visual notes</span>
-            <textarea value={notes} onChange={(event) => setNotes(event.target.value)} rows={5} placeholder="Example: Flow preserved the face better; MJ had stronger typography but added an unwanted background..." />
+            <textarea value={notes} onChange={(event) => setNotes(event.target.value)} rows={5} placeholder="Example: The face remained recognizable, but the model added an unwanted background..." />
           </label>
 
           <button className="benchmark-export" onClick={exportSummary}>{copied === 'summary' ? 'Summary Copied ✓' : 'Copy Score Summary'}</button>
