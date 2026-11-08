@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { BENCHMARKS, VISUAL_SCORE_CRITERIA } from '../src/data/benchmarks.js'
-import { analyzeRecipe, buildFlowPrompt, buildMidjourneyPrompt } from '../src/prompt/index.js'
+import { analyzeRecipe, buildFlowPrompt } from '../src/prompt/index.js'
 
 const issueErrors = (recipe) => analyzeRecipe(recipe).filter((issue) => issue.level === 'error')
 
@@ -20,29 +20,22 @@ test('every benchmark has purpose, visual expectation, and input metadata', () =
   }
 })
 
-test('all Phase D recipes compile for Flow and Midjourney without hard compatibility errors', () => {
+test('all Phase D recipes compile for Flow without hard compatibility errors', () => {
   for (const benchmark of BENCHMARKS) {
     const flow = buildFlowPrompt({ ...benchmark.recipe, flowModelLabel: 'Nano Banana 2' })
-    const mj = buildMidjourneyPrompt(benchmark.recipe)
     assert.ok(flow.length > 300, `Flow too short: ${benchmark.id}`)
-    assert.ok(mj.length > 150, `MJ too short: ${benchmark.id}`)
     assert.deepEqual(issueErrors(benchmark.recipe), [], `Hard compatibility error: ${benchmark.id}`)
   }
 })
 
-test('Flow benchmark prompts never contain Midjourney parameter syntax', () => {
+test('Flow benchmark prompts never contain unsupported parameter syntax', () => {
   for (const benchmark of BENCHMARKS) {
     const flow = buildFlowPrompt({ ...benchmark.recipe, flowModelLabel: 'Nano Banana 2' })
     assert.doesNotMatch(flow, /--ar|--raw|--sref|--oref|--seed|--v\s/, benchmark.id)
   }
 })
 
-test('Midjourney benchmark prompts finish with a supported model parameter', () => {
-  for (const benchmark of BENCHMARKS) {
-    const mj = buildMidjourneyPrompt(benchmark.recipe)
-    assert.match(mj, /--(?:v 8\.2|v 8\.1|v 7|niji 7)$/, benchmark.id)
-  }
-})
+
 
 test('benchmark matrix covers Screen Print, DTF, DTG, Tattoo, Reference, Logo, and Dual Style', () => {
   const methods = new Set(BENCHMARKS.map((item) => item.recipe.printMethod))
@@ -82,10 +75,10 @@ test('Screen Print benchmarks compile spot-color language and raster benchmarks 
   assert.match(buildFlowPrompt(dtg.recipe), /full-color DTG raster artwork/)
 })
 
-test('Typography-heavy benchmark keeps exact requested wording in Midjourney output', () => {
+test('Typography-heavy benchmark keeps exact requested wording in Flow output', () => {
   const benchmark = BENCHMARKS.find((item) => item.id === 'technical-typography-limited')
-  const mj = buildMidjourneyPrompt(benchmark.recipe)
-  assert.match(mj, /"TURBO SYSTEM"/)
-  assert.match(mj, /"UNIT 04 \/ HIGH BOOST"/)
-  assert.match(mj, /"ENGINEERING DIVISION"/)
+  const prompt = buildFlowPrompt(benchmark.recipe)
+  assert.match(prompt, /"TURBO SYSTEM"/)
+  assert.match(prompt, /"UNIT 04 \/ HIGH BOOST"/)
+  assert.match(prompt, /"ENGINEERING DIVISION"/)
 })
