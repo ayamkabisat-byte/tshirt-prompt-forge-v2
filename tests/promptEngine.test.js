@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { STYLE_CATEGORIES, V1_STYLE_COUNT } from '../src/data/styles.js'
-import { analyzeRecipe, buildFlowPrompt, buildMidjourneyPrompt, optimizeRecipe } from '../src/prompt/index.js'
+import { analyzeRecipe, buildFlowPrompt, optimizeRecipe } from '../src/prompt/index.js'
 
 function recipe(overrides = {}) {
   return {
@@ -36,9 +36,6 @@ function recipe(overrides = {}) {
     typographyPreset: 'auto', typographyStyle: '',
     logoIntegration: 'none', logoText: '', logoReference: '',
     extraPrompt: '', negativePrompt: '',
-    mjModel: '8.2', raw: true, stylize: 100, chaos: 0,
-    imageWeight: 1.5, referenceUrl: '', styleReference: '', styleWeight: 100,
-    useOmniReference: false, omniReference: '', omniWeight: 100, seed: '',
     flowModel: 'nano-banana-2',
     ...overrides,
   }
@@ -53,38 +50,32 @@ test('v1 style migration contains exactly 65 unique canonical presets', () => {
   assert.equal(new Set(styles.map((style) => style.id)).size, 65)
 })
 
-test('all 65 styles compile in both reference and graphic modes', () => {
+test('all 65 styles compile for Flow in reference and graphic modes', () => {
   const styles = STYLE_CATEGORIES.flatMap((category) => category.styles)
   for (const style of styles) {
     const ref = recipe({ primaryStyle: style.id })
     const graphic = recipe({ primaryStyle: style.id, subjectMode: 'graphic' })
     assert.ok(buildFlowPrompt(ref).length > 200, `Flow reference failed: ${style.id}`)
-    assert.ok(buildMidjourneyPrompt(ref).length > 100, `MJ reference failed: ${style.id}`)
     assert.ok(buildFlowPrompt(graphic).length > 200, `Flow graphic failed: ${style.id}`)
-    assert.ok(buildMidjourneyPrompt(graphic).length > 100, `MJ graphic failed: ${style.id}`)
   }
 })
 
-test('Flow prompt never leaks Midjourney parameter syntax', () => {
+test('Flow prompt contains no unsupported model-parameter syntax', () => {
   const output = buildFlowPrompt(recipe())
   assert.doesNotMatch(output, /--ar|--raw|--sref|--oref|--v\s/)
   assert.match(output, /FLOW SETTING NOTE/)
 })
 
-test('Midjourney parameters are kept at the end', () => {
-  const output = buildMidjourneyPrompt(recipe())
-  assert.match(output, /--ar 3:4 --raw --s 100 --v 8\.2$/)
-})
 
 test('exact typography uses double quotes while concept text is not quoted', () => {
-  const output = buildMidjourneyPrompt(recipe({ textTop: 'WILD ROAD', textBottom: 'TOKYO 1978' }))
+  const output = buildFlowPrompt(recipe({ textTop: 'WILD ROAD', textBottom: 'TOKYO 1978' }))
   assert.match(output, /"WILD ROAD"/)
   assert.match(output, /"TOKYO 1978"/)
   assert.doesNotMatch(output, /"fierce tiger riding a vintage cafe racer motorcycle"/)
 })
 
 test('Wanted Poster does not force readable bounty wording when typography is empty', () => {
-  const output = buildMidjourneyPrompt(recipe({ primaryStyle: 'poster-wanted' }))
+  const output = buildFlowPrompt(recipe({ primaryStyle: 'poster-wanted' }))
   assert.doesNotMatch(output, /\bWANTED\b|DEAD OR ALIVE/)
   assert.match(output, /no unrequested readable titles/)
 })
@@ -137,13 +128,6 @@ test('Vector Ready + Soft Fade is a hard conflict and optimizer repairs it', () 
   assert.equal(optimizeRecipe(r).edge, 'organic')
 })
 
-test('Omni Reference requires V7 and a non-empty Omni URL', () => {
-  const r = recipe({ useOmniReference: true, mjModel: '8.2', omniReference: '' })
-  const codes = issueCodes(r)
-  assert.ok(codes.includes('OMNI_VERSION'))
-  assert.ok(codes.includes('OMNI_EMPTY'))
-  assert.equal(optimizeRecipe(r).mjModel, '7')
-})
 
 test('strict fidelity warns when either primary or secondary style is highly abstract', () => {
   const r = recipe({ primaryStyle: 'vector-bazzier', secondaryStyle: 'pure-abstract-geo', referenceFidelity: 'strict' })
@@ -180,14 +164,14 @@ test('dual-style compiler applies secondary style using the selected fusion mode
   assert.match(output, /Ukiyo-e|woodblock/)
 })
 
-test('Bobber Cult V5 remains simple across Flow and Midjourney graphic modes', () => {
+test('Bobber Cult V5 remains simple in Flow graphic mode', () => {
   const r = recipe({
     primaryStyle: 'moto-bobber-cult', subjectMode: 'graphic',
     idea: 'a happy cartoon sea sponge transformed into a vintage crew-shirt graphic',
     printMethod: 'dtf', vectorReady: false, colorCountMode: 'auto',
     detailLevel: 'balanced',
   })
-  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+  for (const output of [buildFlowPrompt(r)]) {
     assert.match(output, /ONE memorable version|ONE striking visual idea/)
     assert.match(output, /minimal tonal steps/)
     assert.match(output, /do not add gradients|must not add gradients/i)
@@ -216,7 +200,7 @@ test('Markus Manson can keep complex illustrated linework with DTG or DTF', () =
       idea: 'mythic nine-tailed fox', printMethod, vectorReady: false,
       detailLevel: 'intricate', colorCountMode: 'full',
     })
-    for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+    for (const output of [buildFlowPrompt(r)]) {
       assert.match(output, /controlled high-density directional linework/)
       assert.match(output, /deep structural blacks/)
       assert.match(output, /dense intricate detailing/)
@@ -232,7 +216,7 @@ test('Bobber Cult V5.1 defaults to drawn figures rather than photographic hands'
       idea: 'praying hands with a small rosary',
       printMethod: 'dtf', vectorReady: false, detailLevel: 'balanced',
     })
-    for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+    for (const output of [buildFlowPrompt(r)]) {
       assert.match(output, /hand-drawn two-dimensional graphic illustration|hand-drawn vintage custom-culture merch illustration/)
       assert.match(output, /photo collage|photographic cutouts/)
       assert.match(output, /ONLY when the user explicitly asks|ONLY on explicit user request/)
@@ -247,7 +231,7 @@ test('Bobber Cult V5.1 limits character clutter while keeping recognizable subje
     idea: 'an animated yellow sea sponge as a garage club mascot',
     printMethod: 'dtg', vectorReady: false, detailLevel: 'balanced',
   })
-  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+  for (const output of [buildFlowPrompt(r)]) {
     assert.match(output, /recognizable identity/)
     assert.match(output, /ONE dominant action/)
     assert.match(output, /few accessories|needless accessories/)
@@ -261,7 +245,7 @@ test('Bobber Cult V5.1 preserves striking V-twin machinery and custom text hiera
     idea: 'V-twin motorcycle engine', textTop: 'V-TWIN', textBottom: 'MACHINE',
     printMethod: 'screenprint', vectorReady: true,
   })
-  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+  for (const output of [buildFlowPrompt(r)]) {
     assert.match(output, /essential structural shapes|bold mechanical construction/)
     assert.match(output, /lettering when|striking typography/)
     assert.match(output, /V-TWIN/)
@@ -275,7 +259,7 @@ test('Felix LaFlamme V2 keeps halftone optional and local in both prompt engines
     idea: 'a pink cartoon character enjoying candy',
     printMethod: 'dtg', vectorReady: false, detailLevel: 'balanced',
   })
-  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+  for (const output of [buildFlowPrompt(r)]) {
     assert.match(output, /halftone dots.*optional and localized/i)
     assert.match(output, /layered cel-like shading/i)
     assert.match(output, /varied line weight|varied-weight black hand-inked/i)
@@ -291,7 +275,7 @@ test('Felix LaFlamme V2 preserves identifiable characters with exaggerated actin
     referenceFidelity: 'balanced', printMethod: 'dtf',
     vectorReady: false, detailLevel: 'balanced',
   })
-  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+  for (const output of [buildFlowPrompt(r)]) {
     assert.match(output, /Preserve the subject.s defining identity/i)
     assert.match(output, /exaggerated but recognizable anatomy/i)
     assert.match(output, /pose, facial expression, proportions, motion and personality/i)
@@ -305,7 +289,7 @@ test('Felix LaFlamme V2 allows complex action comics but keeps optional gross-ou
     idea: 'an energetic arcade fighting game scene',
     printMethod: 'dtg', vectorReady: false, detailLevel: 'intricate',
   })
-  for (const output of [buildFlowPrompt(r), buildMidjourneyPrompt(r)]) {
+  for (const output of [buildFlowPrompt(r)]) {
     assert.match(output, /elaborate multi-character comic scenes/i)
     assert.match(output, /slime, dripping, skulls, monsters and skateboards are optional motifs/i)
     assert.match(output, /dense intricate detailing/i)
