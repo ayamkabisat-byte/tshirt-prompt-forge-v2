@@ -115,3 +115,39 @@ Notation: KEEP = defining language worth preserving; CHECK = likely overly narro
 
 ## Approval gate
 No edits to src/data/styles/*, src/data/presets.js or src/prompt/* are authorized by this document. Only a future explicit user approval permits parameter changes.
+
+
+## Reference-image review: Félix LaFlamme — 2026-11-08
+Status: **candidate only; do not edit style presets yet**.
+Evidence: user-provided screenshots of artist's official website portfolio and a printed SpongeBob-themed shirt; official website https://www.felixlaflamme.com/ and artist biography https://www.felixlaflamme.com/%C3%A0-propos; Behance artist profile https://www.behance.net/felixlaflamme.
+Artist's own description cites punk-rock, skateboarding, comics, underground culture and 80s/90s. He also works on albums, merch, comics and licensed SpongeBob artwork; skateboards are a cultural influence, NOT mandatory illustration subjects.
+
+### Characteristic visual grammar (preserve)
+- Character-first, high-impact underground-cartoon illustration: exaggerated anatomy and facial expressions, grotesque-but-playful horror humor, manic eyes, teeth, tongues, skulls, mutants, monsters, transformed everyday objects and sometimes familiar pop-cultural characters. Do not force any single motif.
+- Very thick, clean, confident **black outer contour** and controlled fine interior inkwork: hatch strokes, stipples, cel-like black shadow pockets and small distress speckles. Bold silhouette with dense micro-details.
+- Intensely saturated, often electric/neon complementary or clashing palettes (acid green, magenta, cyan, orange, purple, yellow); strong black separation with solid fills and targeted gradient/airbrush highlights when visually useful. Avoid converting everything into vintage brown or washed-out grunge.
+- Exaggerated 3-D dimensionality through perspective, contours and selective shading while retaining a 2-D comic/cartoon finish; strong foreshortening, action, splashes, goo, saliva, slime and motion accents when appropriate.
+- Central standalone composition, high readability from a distance, usually subjects dominate more than typography; typography optional, energetic hand-lettering when requested. Subject does not need to be a skateboard, a skater, skull or zombie.
+- Digital illustration / raster-compatible, not compulsory vector-only or flat minimal art. Keep DTG/DTF rich color/texture allowed.
+
+### Specific evidence visible in provided screenshots
+- Website character gallery: colorful tiger with watermelon; monster/demon figures; eyeball/brain/limb mashups; skateboard shoe with stylized organs; gamer and skeleton imagery; cats and other creature transformations; vivid colors and thick black outlines.
+- Second screenshot: licensed SpongeBob-themed artwork featuring a large pink cartoon brain, protruding eyes, elongated tongue, slime/drips, thick black outlines, bold cyan/yellow/pink palette. This verifies **grotesque pop-culture character reinterpretation**, not only skeleton/skate aesthetics. Artist's own biography documents Paramount SpongeBob franchise work; it does not authorize users to copy SpongeBob for third-party merchandise.
+
+### Compared with current skate-laflamme prompt
+Current prompt already captures underground comics, expressive characters, bold black ink, saturated palette, dark humor and no mandatory skateboard. Still underspecifies: **specific gross-out mutant/cartoon energy; chunky exaggerated organic shapes; wet slime/goo and splashes when suitable; fine interior hatching and small texture marks; dynamic perspective; juxtaposition of cute childhood motifs and horror**. Current "skate punk" label may bias subjects toward skateboard. Candidate label (only if approved): "Félix LaFlamme — Monster Pop / Underground Comic" or more generic "Neon Gross-Out Underground Comic" while retaining original style ID for compatibility.
+
+### Candidate direction for side-by-side testing, not committed to source
+"An original, high-impact underground cartoon and punk-comic apparel illustration of the specified subject, with a bold readable central silhouette, exaggerated expressive anatomy and playful grotesque transformation when compatible with the subject, chunky confident black contour lines, intricate interior ink hatching and stippled detail, dramatic solid-black shadows, highly saturated electric contrasting colors, energetic foreshortening, and lively drips, splatters or motion accents only where they naturally fit. Mix nostalgic 1980s–1990s skate-comic attitude with irreverent dark humor and colorful childhood-cartoon exuberance. Preserve recognizable subject features; never add a skateboard, skull, slime or monster features by default. Artwork can be rich raster/digital illustration, not vector-only. Hand lettering optional unless the recipe asks for text."
+Test BOTH character and object/photo-reference subjects with controlled color and composition settings; compare baseline Flow and Midjourney results. Check if signature survives with a mundane object and with no skull/skateboard. For commercial use do not automatically inject recognizable copyrighted franchise characters unless supplied with proper rights.
+
+## Reference-image review: Bobber Cult — 2026-11-08
+Status: **candidate only; do not edit style presets yet**.
+Evidence: user screenshot of Instagram @bobbercult grid with custom-bike and crew merchandise, event posters, skulls, human figures, wings, lettering and badges.
+- Not just generic lowbrow mascots, monster skulls, flame motifs and pinstriping. Typography/layout is often as important as figure rendering.
+- Defining visual language: high-impact **custom-culture merchandise illustration**, thick black contour line with densely engraved/hatching interior detail, strong carved shadow areas, retro warm limited colors (often black/cream/red/orange/yellow, but flexible), expressive humans and motorbikes, vintage hand-painted/comic or event-poster layout.
+- Lettering can be vintage serif, gothic/blackletter, hand-painted signage, psychedelic or curved display lettering, integrated into the central image; not always symmetrical badge or bike.
+- Biker/motorcycle cultural context matters, but motorcycle, skull, flames or mascots not obligatory for every user-supplied subject.
+- Distinction from Vintage Moto Line-Art: Bobber Cult emphasizes **narrative, custom lettering and apparel/event-merch visual hierarchy**; Vintage Moto Line-Art emphasizes **precision of the classical motorcycle and mechanical drawing**.
+- Candidate approach: bold black contour + detailed interior ink + retro screenprint-inspired composition; allow photographic or painterly processing if appropriate but do not default to clean mechanical vector.
+- Compare controlled samples: subject tiger, group photo or astronaut, alongside the identical subject in Vintage Moto Line-Art; examine lettering and poster vibe vs machine delineation.
